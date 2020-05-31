@@ -7,7 +7,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_PROBLEM")
-class Problem(
+data class Problem(
 
         @Id
         @GeneratedValue
