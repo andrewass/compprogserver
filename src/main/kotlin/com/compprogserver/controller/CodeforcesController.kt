@@ -23,7 +23,7 @@ class CodeforcesController @Autowired constructor(
     }
 
     @GetMapping("/submissions")
-    fun getUserSubmissions(@RequestParam("username") username: String) : ResponseEntity<List<Submission>> {
+    fun getUserSubmissions(@RequestParam("username") username: String) : ResponseEntity<Set<Submission>> {
         val submissions = codeforcesService.getUserSubmissions(username)
         return ResponseEntity(submissions, HttpStatus.OK)
     }

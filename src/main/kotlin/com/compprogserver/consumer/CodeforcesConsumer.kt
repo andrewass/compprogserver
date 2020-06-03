@@ -1,6 +1,5 @@
 package com.compprogserver.consumer
 
-import com.compprogserver.entity.Contest
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,14 +25,14 @@ class CodeforcesConsumer @Autowired constructor(
         }
     }
 
-    fun getUserSubmissions(username: String): List<Submission> {
+    fun getUserSubmissions(userHandle: UserHandle): Set<Submission> {
         val url = "$codeforcesUrl/user.status"
-        val response = commonConsumer.exchange(url, Pair("handle", username),
+        val response = commonConsumer.exchange(url, Pair("handle", userHandle.username),
                 Pair("from", "1"), Pair("count", submissionCount))
         return if (response.statusCode.is2xxSuccessful) {
-            convertToSubmission(response.body!!).toList()
+            convertToSubmission(response.body!!, userHandle)
         } else {
-            emptyList()
+            emptySet()
         }
     }
 }

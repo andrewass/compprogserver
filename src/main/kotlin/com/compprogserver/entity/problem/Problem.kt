@@ -1,6 +1,7 @@
 package com.compprogserver.entity.problem
 
 import com.compprogserver.entity.Platform
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -8,6 +9,7 @@ import javax.persistence.*
 data class Problem(
 
         @Id
+        @Column(name = "PROBLEM_ID")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
 
@@ -17,6 +19,20 @@ data class Problem(
         @Enumerated(EnumType.STRING)
         val platform: Platform? = null,
 
-        @OneToMany(mappedBy = "problem")
-        val submissions: List<Submission> = mutableListOf()
-)
+        @Column(name = "problem_name", nullable = false)
+        val problemName: String = "",
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
+        val submissions: MutableList<Submission> = mutableListOf()
+) {
+    override fun hashCode() = problemName.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Problem) {
+            other.problemName == problemName
+        } else {
+            false
+        }
+    }
+}

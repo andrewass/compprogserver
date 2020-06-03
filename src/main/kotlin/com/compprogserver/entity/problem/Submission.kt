@@ -1,6 +1,8 @@
 package com.compprogserver.entity.problem
 
 import com.compprogserver.entity.UserHandle
+import com.fasterxml.jackson.annotation.JsonIgnore
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -16,15 +18,27 @@ class Submission(
 
         val contestId: Int? = null,
 
-        @ManyToOne(optional = false)
+        @ManyToOne
         @JoinColumn(name = "PROBLEM_ID")
-        val problem : Problem? = null,
+        var problem: Problem? = null,
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "HANDLE_ID")
-        val userhandle : UserHandle? = null,
+        val userhandle: UserHandle? = null,
 
         @Enumerated(EnumType.STRING)
-        val verdict: Verdict
+        val verdict: Verdict? = null,
 
-)
+        val submitted: LocalDateTime? = null
+) {
+
+    override fun hashCode() = remoteId.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Submission) {
+            other.remoteId == remoteId
+        } else {
+            false
+        }
+    }
+}

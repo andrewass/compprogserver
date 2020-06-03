@@ -1,7 +1,7 @@
 
 create table t_user_handle(
     handle_id           bigint(20)  not null auto_increment,
-    username            varchar(50) not null,
+    username            varchar(50)  not null,
     first_name          varchar(50),
     last_name           varchar(50),
     rating              int(11),
@@ -12,13 +12,13 @@ create table t_user_handle(
     date_updated        datetime,
     residing_country    varchar(50),
     email_address       varchar(50),
-    platform            varchar(50),
+    platform            varchar(50)  not null,
     primary key (handle_id)
 );
 
 create table t_problem(
 	problem_id          bigint(20)  not null auto_increment,
-	problem_name        varchar(100),
+	problem_name        varchar(100)  not null,
 	platform            varchar(50),
 	problem_tag         varchar(50),
 	primary key (problem_id)
@@ -28,7 +28,7 @@ create table t_submission(
     submission_id       bigint(20)  not null auto_increment,
     remote_id           int(11),
     contest_id          int(11),
-    problem_id          bigint(20)  not null,
+    problem_id          bigint(20),
     handle_id           bigint(20)  not null,
     verdict             varchar(50),
     submitted           datetime,

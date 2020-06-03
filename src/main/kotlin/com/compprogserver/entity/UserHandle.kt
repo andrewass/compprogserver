@@ -8,9 +8,10 @@ class UserHandle(
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = " HANDLE_ID")
+        @Column(name = "HANDLE_ID")
         val id: Long? = null,
 
+        @Column(name = "USERNAME", nullable = false)
         val username: String = "",
 
         val firstName: String? = null,
@@ -25,6 +26,7 @@ class UserHandle(
 
         val emailAddress: String? = null,
 
+        @Column(name = "PLATFORM", nullable = false)
         @Enumerated(EnumType.STRING)
         val platform: Platform? = null,
 
