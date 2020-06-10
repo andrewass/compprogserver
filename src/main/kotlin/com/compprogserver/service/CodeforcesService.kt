@@ -3,7 +3,6 @@ package com.compprogserver.service
 import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.UserHandle
-import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.repository.ProblemRepository
 import com.compprogserver.repository.SubmissionRepository
@@ -47,12 +46,11 @@ class CodeforcesService @Autowired constructor(
     private fun attachSubmissionsToProblems(submissions: Set<Submission>) {
         for(submission in submissions){
             if(submission.id == null){
-                val problem = problemRepository.findByProblemName(submission.problem!!.problemName!!)
+                val problem = problemRepository.findByProblemName(submission.problem!!.problemName)
                         ?: problemRepository.save(submission.problem!!)
                 submission.problem = problem
                 problem.submissions.add(submission)
                 problemRepository.save(problem)
-                val tester = 1221
             }
         }
     }

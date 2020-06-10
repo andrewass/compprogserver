@@ -21,6 +21,7 @@ create table t_problem(
 	problem_name        varchar(100)  not null,
 	platform            varchar(50),
 	problem_tag         varchar(50),
+	problem_url         varchar(100),
 	primary key (problem_id)
 );
 

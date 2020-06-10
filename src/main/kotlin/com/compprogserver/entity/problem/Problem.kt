@@ -22,6 +22,8 @@ data class Problem(
         @Column(name = "problem_name", nullable = false)
         val problemName: String = "",
 
+        val problemUrl : String = "",
+
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
         val submissions: MutableList<Submission> = mutableListOf()

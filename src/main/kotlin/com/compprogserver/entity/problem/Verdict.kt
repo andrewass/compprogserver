@@ -1,7 +1,5 @@
 package com.compprogserver.entity.problem
 
-enum class Verdict {
-    SOLVED,
-    COMPILATION_ERROR,
-    TIME_LIMIT_EXCEEDED
+enum class Verdict(val decodes: String) {
+    SOLVED("OK");
 }

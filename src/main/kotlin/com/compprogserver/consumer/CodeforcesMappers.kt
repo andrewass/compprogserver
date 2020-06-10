@@ -4,6 +4,7 @@ import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.Submission
+import com.compprogserver.entity.problem.Verdict
 import org.json.JSONObject
 import java.time.Instant
 import java.time.LocalDateTime
@@ -32,13 +33,16 @@ fun convertToSubmission(response: String, userHandle: UserHandle): Set<Submissio
     val submissions = jsonBody.getJSONArray("result")
     for (i in 0 until submissions.length()) {
         val submission = submissions.getJSONObject(i)
-        submissionSet.add(Submission(
-                remoteId = submission.getInt("id"),
-                userhandle = userHandle,
-                contestId = submission.getInt("contestId"),
-                submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
-                problem = convertToProblem(submission.getJSONObject("problem"))
-        ))
+        if (submission.getString("verdict") == "OK") {
+            submissionSet.add(Submission(
+                    remoteId = submission.getInt("id"),
+                    userhandle = userHandle,
+                    contestId = submission.getInt("contestId"),
+                    submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
+                    problem = convertToProblem(submission.getJSONObject("problem")),
+                    verdict = Verdict.SOLVED
+            ))
+        }
     }
     return submissionSet
 }
@@ -46,7 +50,8 @@ fun convertToSubmission(response: String, userHandle: UserHandle): Set<Submissio
 fun convertToProblem(problem: JSONObject): Problem {
     return Problem(
             platform = CODEFORCES,
-            problemName = problem.getString("name")
+            problemName = problem.getString("name"),
+            problemUrl = "https://codeforces.com/contest/${problem.getInt("contestId")}/problem/${problem.getString("index")}"
     )
 }
 
