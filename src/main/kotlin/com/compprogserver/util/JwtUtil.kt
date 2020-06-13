@@ -8,29 +8,32 @@ import java.util.*
 
 private const val SECRET_KEY = "secret"
 
-
-fun isTokenExpired(token: String) = false
-
-/**
- * Generate token for a given user
- */
 fun generateToken(userDetails: UserDetails): String {
     val claims = hashMapOf<String, Any>()
     return createToken(userDetails.username, claims)
 }
 
+fun tokenIsValid(token : String, userDetails: UserDetails) : Boolean {
+    val username = extractUsername(token)
+    return username == userDetails.username && !isTokenExpired(token)
+}
+
+fun extractUsername(token: String) = extractClaimFromToken(token, Claims::getSubject)
+
+private fun isTokenExpired(token: String) = extractExpiration(token).before(Date())
+
+
+private fun extractExpiration(token : String) = extractClaimFromToken(token, Claims::getExpiration)
+
+private fun <T> extractClaimFromToken(token: String, lambda: (Claims) -> T) : T {
+    val claims = getAllClaims(token)
+    return lambda(claims)
+}
+
+private fun getAllClaims(token: String) = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).body
 
 private fun createToken(subject: String, claims: HashMap<String, Any>): String {
     return Jwts.builder().setSubject(subject).setClaims(claims)
             .setIssuedAt(Date()).setExpiration(Date(System.currentTimeMillis() + 600000))
             .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()
-}
-
-
-/**
- * Extract all claims from the token
- */
-private fun <T> extractClaimFromToken(token : String) : String {
-    val claims =  Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token)
-    return ""
 }
