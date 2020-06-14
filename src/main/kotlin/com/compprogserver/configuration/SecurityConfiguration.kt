@@ -1,7 +1,7 @@
 package com.compprogserver.configuration
 
 import com.compprogserver.controller.filter.JwtRequestFilter
-import com.compprogserver.service.CustomUserDetailsService
+import com.compprogserver.service.CustomUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,17 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 class SecurityConfiguration @Autowired constructor(
-        private val customUserDetailsService: CustomUserDetailsService,
+        private val customUserService: CustomUserService,
         private val jwtRequestFilter: JwtRequestFilter
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(customUserDetailsService)
+        auth.userDetailsService(customUserService)
     }
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .authorizeRequests().antMatchers("/auth/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,36 +1,22 @@
 package com.compprogserver.entity
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
+import javax.persistence.*
 
-class User : UserDetails {
+@Entity
+@Table(name = "T_USER")
+class User(
 
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "USER_ID")
+        val id: Long? = null,
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        TODO("Not yet implemented")
-    }
+        @Column(nullable = false)
+        val username: String = "",
 
-    override fun isEnabled(): Boolean {
-        TODO("Not yet implemented")
-    }
+        @Column(nullable = false)
+        val password: String = "",
 
-    override fun getUsername(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun isCredentialsNonExpired(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPassword(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun isAccountNonExpired(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isAccountNonLocked(): Boolean {
-        TODO("Not yet implemented")
-    }
-}
+        @Column(nullable = false)
+        val email: String = ""
+)

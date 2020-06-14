@@ -1,6 +1,6 @@
 package com.compprogserver.controller.filter
 
-import com.compprogserver.service.CustomUserDetailsService
+import com.compprogserver.service.CustomUserService
 import com.compprogserver.util.extractUsername
 import com.compprogserver.util.tokenIsValid
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,28 +15,25 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class JwtRequestFilter @Autowired constructor(
-        private val userDetailsService: CustomUserDetailsService
+        private val userService: CustomUserService
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val header = request.getHeader("Authorization")
 
-        var token: String? = null
-        var username: String? = null
-
         if (header != null && header.startsWith("Bearer ")) {
-            token = header.split(" ").last()
-            username = extractUsername(token)
-        }
+            val token = header.split(" ").last()
+            val username = extractUsername(token)
 
-        if (username != null && SecurityContextHolder.getContext().authentication == null) {
-            val userdetails = userDetailsService.loadUserByUsername(username)
-            if (tokenIsValid(token!!, userdetails)) {
-                val authToken = UsernamePasswordAuthenticationToken(userdetails, null, userdetails.authorities)
-                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authToken
+            if (SecurityContextHolder.getContext().authentication == null) {
+                val userdetails = userService.loadUserByUsername(username)
+                if (tokenIsValid(token, userdetails)) {
+                    val authToken = UsernamePasswordAuthenticationToken(userdetails, null, userdetails.authorities)
+                    authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authToken
+                }
             }
         }
-        chain.doFilter(request,response)
+        chain.doFilter(request, response)
     }
 }
