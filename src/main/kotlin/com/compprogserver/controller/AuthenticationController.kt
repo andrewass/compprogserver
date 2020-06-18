@@ -49,5 +49,4 @@ class AuthenticationController @Autowired constructor(
         val userDetails = userService.loadUserByUsername(username)
         return generateToken(userDetails)
     }
-
 }
