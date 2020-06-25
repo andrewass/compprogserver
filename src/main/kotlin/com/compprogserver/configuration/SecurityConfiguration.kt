@@ -29,7 +29,7 @@ class SecurityConfiguration @Autowired constructor(
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/*", "/codeforces/*", "/problem/*")
+                .antMatchers("/auth/*", "/codeforces/*", "/problem/*","/contest/*")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

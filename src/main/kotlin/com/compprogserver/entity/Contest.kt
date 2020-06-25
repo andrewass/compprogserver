@@ -1,5 +1,6 @@
 package com.compprogserver.entity
 
+import java.io.Serializable
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -7,12 +8,17 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_CONTEST")
-data class Contest(
+class Contest(
         @Id
         @GeneratedValue
         val id: Long? = null,
 
-        val name : String = "",
+        val name: String = "",
 
-        val description : String = ""
-)
+        val description: String = ""
+) : Serializable {
+
+    companion object {
+        private const val serialVersionUID = 324235432345L
+    }
+}
