@@ -19,5 +19,4 @@ class KafkaController @Autowired constructor(
     fun publishMessage(@RequestBody contestRequest : PublishContestRequest) {
         template.send(contestRequest.topic, contestRequest.contest)
     }
-
 }
