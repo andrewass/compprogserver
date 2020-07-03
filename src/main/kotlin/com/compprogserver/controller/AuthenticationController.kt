@@ -23,30 +23,30 @@ class AuthenticationController @Autowired constructor(
     @PostMapping("/authenticate")
     fun createAuthenticationToken(@RequestBody request: AuthenticationRequest):
             ResponseEntity<AuthenticationResponse> {
-        val jwt = authenticateAndGenerateJwt(request.username, request.password)
-        return ResponseEntity.ok(AuthenticationResponse(jwt))
+        val response = authenticateAndGenerateJwt(request.username, request.password)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/sign-up")
     fun signUpUser(@RequestBody request: SignUpRequest) :
             ResponseEntity<AuthenticationResponse>{
         val newUser = userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.CONFLICT)
-        val jwt  = authenticateAndGenerateJwt(newUser.username, newUser.password)
-        return ResponseEntity.ok(AuthenticationResponse(jwt))
+        val response  = authenticateAndGenerateJwt(newUser.username, newUser.password)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/sign-in")
     fun signInUser(@RequestBody request: AuthenticationRequest) :
             ResponseEntity<AuthenticationResponse>{
         val persistedUser = userService.getPersistedUser(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val jwt = authenticateAndGenerateJwt(persistedUser.username, persistedUser.password)
-        return ResponseEntity.ok(AuthenticationResponse(jwt))
+        val response = authenticateAndGenerateJwt(persistedUser.username, persistedUser.password)
+        return ResponseEntity.ok(response)
     }
 
-    private fun authenticateAndGenerateJwt(username : String, password : String) : String {
+    private fun authenticateAndGenerateJwt(username : String, password : String) : AuthenticationResponse {
         authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(username, password))
         val userDetails = userService.loadUserByUsername(username)
-        return generateToken(userDetails)
+        return AuthenticationResponse(generateToken(userDetails), username)
     }
 }

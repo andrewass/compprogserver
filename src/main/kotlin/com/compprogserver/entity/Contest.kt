@@ -1,6 +1,7 @@
 package com.compprogserver.entity
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -15,7 +16,10 @@ class Contest(
 
         val name: String = "",
 
-        val description: String = ""
+        val description: String = "",
+
+        val startTime : LocalDateTime? = null
+
 ) : Serializable {
 
     companion object {
