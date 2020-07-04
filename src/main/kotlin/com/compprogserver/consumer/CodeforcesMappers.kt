@@ -1,5 +1,6 @@
 package com.compprogserver.consumer
 
+import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
@@ -27,7 +28,7 @@ fun convertToUserHandle(response: String): UserHandle? {
             platform = CODEFORCES)
 }
 
-fun convertToSubmission(response: String, userHandle: UserHandle): Set<Submission> {
+fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submission> {
     val submissionSet = mutableSetOf<Submission>()
     val jsonBody = JSONObject(response)
     val submissions = jsonBody.getJSONArray("result")
@@ -37,7 +38,6 @@ fun convertToSubmission(response: String, userHandle: UserHandle): Set<Submissio
             submissionSet.add(Submission(
                     remoteId = submission.getInt("id"),
                     userhandle = userHandle,
-                    contestId = submission.getInt("contestId"),
                     submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
                     problem = convertToProblem(submission.getJSONObject("problem")),
                     verdict = Verdict.SOLVED
@@ -46,6 +46,24 @@ fun convertToSubmission(response: String, userHandle: UserHandle): Set<Submissio
     }
     return submissionSet
 }
+
+fun convertToContests(response: String): Set<Contest> {
+    val contestSet = mutableSetOf<Contest>()
+    val jsonBody = JSONObject(response)
+    val contests = jsonBody.getJSONArray("result")
+    for (i in 0 until contests.length()) {
+        val contest = contests.getJSONObject(i)
+        contestSet.add(Contest(
+                contestName = contest.getString("name"),
+                startTime = toLocateDateTime(contest.getLong("startTimeSeconds")),
+                duration = contest.getInt("durationSeconds") / 60,
+                platform = CODEFORCES,
+                remoteId = contest.getInt("id")
+        ))
+    }
+    return contestSet
+}
+
 
 fun convertToProblem(problem: JSONObject): Problem {
     return Problem(

@@ -1,5 +1,6 @@
 package com.compprogserver.controller
 
+import com.compprogserver.entity.Contest
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.service.CodeforcesService
@@ -25,5 +26,11 @@ class CodeforcesController @Autowired constructor(
     fun getUserSubmissions(@RequestParam("username") username: String): ResponseEntity<Set<Submission>> {
         val submissions = codeforcesService.getUserSubmissions(username)
         return ResponseEntity(submissions, HttpStatus.OK)
+    }
+
+    @GetMapping("/contests")
+    fun getContests(): ResponseEntity<List<Contest>> {
+        val contests = codeforcesService.getContests()
+        return ResponseEntity(contests, HttpStatus.OK)
     }
 }

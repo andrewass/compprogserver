@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "T_PROBLEM")
-data class Problem(
+class Problem(
 
         @Id
         @Column(name = "PROBLEM_ID")
@@ -22,7 +22,7 @@ data class Problem(
         @Column(name = "problem_name", nullable = false)
         val problemName: String = "",
 
-        val problemUrl : String = "",
+        val problemUrl: String = "",
 
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])

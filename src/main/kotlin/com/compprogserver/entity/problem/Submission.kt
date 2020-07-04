@@ -1,7 +1,6 @@
 package com.compprogserver.entity.problem
 
 import com.compprogserver.entity.UserHandle
-import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -15,8 +14,6 @@ class Submission(
         val id: Long? = null,
 
         val remoteId: Int? = null,
-
-        val contestId: Int? = null,
 
         @ManyToOne
         @JoinColumn(name = "PROBLEM_ID")
