@@ -16,7 +16,7 @@ class SubmissionService @Autowired constructor(
 ) {
 
     fun getSubmissions(request: SubmissionRequest): Collection<Submission> {
-        val userHandles = userHandleRepository.findUserHandleByUsername(request.handle!!)
+        val userHandles = userHandleRepository.findUserHandleByUserHandle(request.handle!!)
         return userHandles.flatMap { submissionRepository.findAllByUserhandle(it) }
     }
 }

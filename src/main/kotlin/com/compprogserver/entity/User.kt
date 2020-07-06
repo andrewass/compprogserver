@@ -1,5 +1,6 @@
 package com.compprogserver.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
@@ -18,5 +19,9 @@ class User(
         val password: String = "",
 
         @Column(nullable = false)
-        val email: String = ""
+        val email: String = "",
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
+        val userHandles : MutableList<UserHandle> = mutableListOf()
 )

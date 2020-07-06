@@ -20,7 +20,7 @@ fun convertToUserHandle(response: String): UserHandle? {
     val handle = handles.getJSONObject(0)
 
     return UserHandle(
-            username = handle.getString("handle"),
+            userHandle = handle.getString("handle"),
             rating = handle.getInt("rating"),
             maxRating = handle.getInt("maxRating"),
             rank = handle.getString("rank"),

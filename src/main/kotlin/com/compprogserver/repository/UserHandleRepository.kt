@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserHandleRepository : JpaRepository<UserHandle, Long> {
 
-    fun findUserHandleByUsername(username: String): List<UserHandle>
+    fun findUserHandleByUserHandle(userHandle: String): List<UserHandle>
 
-    fun findUserHandleByUsernameAndPlatform(username: String, platform: Platform): UserHandle?
+    fun findUserHandleByUserHandleAndPlatform(userHandle: String, platform: Platform): UserHandle?
+
+    fun existsByUserHandleAndPlatform(username: String, platform: Platform): Boolean
 }

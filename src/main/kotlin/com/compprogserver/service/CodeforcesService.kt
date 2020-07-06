@@ -25,7 +25,7 @@ class CodeforcesService @Autowired constructor(
 
     fun getUserHandle(userName: String): UserHandle? {
         val fetchedHandle = codeforcesConsumer.getHandle(userName) ?: return null
-        val persistedUserHandle = userHandleRepository.findUserHandleByUsernameAndPlatform(userName, CODEFORCES)
+        val persistedUserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userName, CODEFORCES)
 
         return if (persistedUserHandle == null) {
             userHandleRepository.save(fetchedHandle)
@@ -36,7 +36,7 @@ class CodeforcesService @Autowired constructor(
     }
 
     fun getUserSubmissions(username: String): Set<Submission> {
-        val userHandle: UserHandle = userHandleRepository.findUserHandleByUsernameAndPlatform(username, CODEFORCES)
+        val userHandle: UserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(username, CODEFORCES)
                 ?: return emptySet()
         val allSubmissions = submissionRepository.findAllByUserhandle(userHandle)
         val fetchedSubmissions = codeforcesConsumer.getUserSubmissions(userHandle)

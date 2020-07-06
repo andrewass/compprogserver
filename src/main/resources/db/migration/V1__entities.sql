@@ -9,19 +9,15 @@ create table t_user(
 
 create table t_user_handle(
     handle_id           bigint(20)  not null auto_increment,
-    username            varchar(50)  not null,
-    first_name          varchar(50),
-    last_name           varchar(50),
+    user_id             bigint(20) not null,
+    user_handle         varchar(50)  not null,
     rating              int(11),
     max_rating          int(11),
     user_rank           varchar(30),
     max_user_rank       varchar(30),
-    date_created        datetime,
-    date_updated        datetime,
-    residing_country    varchar(50),
-    email_address       varchar(50),
     platform            varchar(50)  not null,
-    primary key (handle_id)
+    primary key (handle_id),
+    foreign key (user_id)   references t_user(user_id)
 );
 
 create table t_problem(

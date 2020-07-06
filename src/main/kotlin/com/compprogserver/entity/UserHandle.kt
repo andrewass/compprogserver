@@ -12,19 +12,11 @@ class UserHandle(
         val id: Long? = null,
 
         @Column(name = "USERNAME", nullable = false)
-        val username: String = "",
-
-        val firstName: String? = null,
-
-        val lastName: String? = null,
+        val userHandle: String = "",
 
         var rating: Int? = null,
 
         var maxRating: Int? = null,
-
-        var residingCountry: String? = null,
-
-        val emailAddress: String? = null,
 
         @Column(name = "PLATFORM", nullable = false)
         @Enumerated(EnumType.STRING)
@@ -34,7 +26,11 @@ class UserHandle(
         var rank: String? = null,
 
         @Column(name = "MAX_USER_RANK")
-        var maxRank: String? = null
+        var maxRank: String? = null,
+
+        @ManyToOne
+        @JoinColumn(name = "USER_ID", nullable = false)
+        var user: User? = null
 ) {
 
     fun copyTo(destination: UserHandle) {
@@ -42,7 +38,6 @@ class UserHandle(
         destination.maxRating = maxRating
         destination.rank = rank
         destination.maxRank = maxRank
-        destination.residingCountry = residingCountry
     }
 }
 

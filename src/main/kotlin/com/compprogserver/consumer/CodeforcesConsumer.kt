@@ -28,7 +28,7 @@ class CodeforcesConsumer @Autowired constructor(
 
     fun getUserSubmissions(userHandle: UserHandle): Set<Submission> {
         val url = "$codeforcesUrl/user.status"
-        val response = commonConsumer.exchange(url, Pair("handle", userHandle.username),
+        val response = commonConsumer.exchange(url, Pair("handle", userHandle.userHandle),
                 Pair("from", "1"), Pair("count", submissionCount))
         return if (response.statusCode.is2xxSuccessful) {
             convertToSubmissions(response.body!!, userHandle)
