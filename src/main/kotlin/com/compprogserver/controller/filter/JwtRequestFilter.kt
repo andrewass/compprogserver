@@ -26,9 +26,9 @@ class JwtRequestFilter @Autowired constructor(
             val username = extractUsername(token)
 
             if (SecurityContextHolder.getContext().authentication == null) {
-                val userdetails = userService.loadUserByUsername(username)
-                if (tokenIsValid(token, userdetails)) {
-                    val authToken = UsernamePasswordAuthenticationToken(userdetails, null, userdetails.authorities)
+                val userDetails = userService.loadUserByUsername(username)
+                if (tokenIsValid(token, userDetails)) {
+                    val authToken = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                     authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authToken
                 }

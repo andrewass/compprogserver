@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 
 private const val SECRET_KEY = "secret"
-private const val TOKEN_DURATION = 600000
+private const val TOKEN_DURATION = 6000000
 
 fun generateToken(userDetails: UserDetails): String {
     val claims: HashMap<String, Any> = hashMapOf("sub" to userDetails.username)

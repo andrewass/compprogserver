@@ -1,14 +1,14 @@
 package com.compprogserver.entity
 
-enum class Platform {
+enum class Platform(val decode : String) {
 
-    CODEFORCES,
+    CODEFORCES("Codeforces"),
 
-    CODECHEF,
+    CODECHEF("Codechef"),
 
-    KATTIS,
+    KATTIS("Kattis"),
 
-    UVA,
+    UVA("UVa Online Judge"),
 
-    SPOJ
+    SPOJ("Sphere Online Judge")
 }

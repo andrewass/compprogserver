@@ -11,7 +11,7 @@ class UserHandle(
         @Column(name = "HANDLE_ID")
         val id: Long? = null,
 
-        @Column(name = "USERNAME", nullable = false)
+        @Column(name = "USER_HANDLE", nullable = false)
         val userHandle: String = "",
 
         var rating: Int? = null,

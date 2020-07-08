@@ -8,29 +8,32 @@ import com.compprogserver.repository.UserRepository
 import com.compprogserver.util.extractUsername
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
+@Transactional
 class UserHandleService @Autowired constructor(
         private val userHandleRepository: UserHandleRepository,
         private val userRepository: UserRepository
 ) {
-    fun getUserHandlesFromToken(token: String) : List<UserHandle>{
+    fun getUserHandlesFromToken(token: String): List<UserHandle> {
         return emptyList()
     }
 
     fun addUserHandle(request: AddUserHandleRequest) {
-        if(userHandleNotExists(request)){
+        if (userHandleNotExists(request)) {
             val userHandle = UserHandle(userHandle = request.userHandle, platform = Platform.CODEFORCES)
             val userName = extractUsername(request.token)
             val user = userRepository.findByUsername(userName)
-            if(user != null){
+            if (user != null) {
                 user.userHandles.add(userHandle)
+                userHandle.user = user
                 userRepository.save(user)
             }
         }
     }
 
     private fun userHandleNotExists(request: AddUserHandleRequest): Boolean {
-        return userHandleRepository.existsByUserHandleAndPlatform(request.userHandle, Platform.CODEFORCES)
+        return !userHandleRepository.existsByUserHandleAndPlatform(request.userHandle, Platform.CODEFORCES)
     }
 }
