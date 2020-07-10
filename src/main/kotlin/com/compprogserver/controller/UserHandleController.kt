@@ -1,7 +1,7 @@
 package com.compprogserver.controller
 
 import com.compprogserver.controller.request.AddUserHandleRequest
-import com.compprogserver.controller.request.GetUserHandleRequest
+import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.service.UserHandleService
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,15 +16,15 @@ class UserHandleController @Autowired constructor(
 ) {
 
     @PostMapping("get-userhandles")
-    fun getUserHandlesFromToken(@RequestBody request: GetUserHandleRequest): ResponseEntity<List<UserHandle>> {
-        val userHandles = userHandleService.getUserHandlesFromToken(request.token)
+    fun getUserHandlesFromToken(@RequestBody request: GetUserHandlesRequest): ResponseEntity<List<UserHandle>> {
+        val userHandles = userHandleService.getUserHandlesFromUsername(request.username)
         return ResponseEntity.ok(userHandles)
     }
 
     @PostMapping("add-userhandle")
     fun addUserHandle(@RequestBody request: AddUserHandleRequest): ResponseEntity<List<UserHandle>> {
         userHandleService.addUserHandle(request)
-        val userHandles = userHandleService.getUserHandlesFromToken(request.token)
+        val userHandles = userHandleService.getUserHandlesFromUsername(request.token)
         return ResponseEntity.ok(userHandles)
     }
 }

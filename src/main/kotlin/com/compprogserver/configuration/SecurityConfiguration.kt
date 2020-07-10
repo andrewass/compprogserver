@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 class SecurityConfiguration @Autowired constructor(
         private val customUserService: CustomUserService,
         private val jwtRequestFilter: JwtRequestFilter
@@ -27,10 +27,11 @@ class SecurityConfiguration @Autowired constructor(
     }
 
     override fun configure(http: HttpSecurity) {
-        http.csrf().disable()
+        http.cors()
+                .and()
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/*", "/codeforces/*", "/problem/*"
-                        , "/contest/*", "/common/*", "/userhandle/*")
+                .antMatchers("/auth/*", "/codeforces/*", "/problem/*", "/contest/*", "/common/*")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -1,6 +1,7 @@
 package com.compprogserver.service
 
 import com.compprogserver.controller.request.AddUserHandleRequest
+import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.repository.UserHandleRepository
@@ -16,13 +17,17 @@ class UserHandleService @Autowired constructor(
         private val userHandleRepository: UserHandleRepository,
         private val userRepository: UserRepository
 ) {
-    fun getUserHandlesFromToken(token: String): List<UserHandle> {
-        return emptyList()
+
+    fun getUserHandlesFromUsername(username : String): List<UserHandle> {
+        val user = userRepository.findByUsername(username)
+        return userHandleRepository.findAllUserHandlesForUser(user!!)
     }
 
     fun addUserHandle(request: AddUserHandleRequest) {
         if (userHandleNotExists(request)) {
-            val userHandle = UserHandle(userHandle = request.userHandle, platform = Platform.CODEFORCES)
+            val userHandle = UserHandle(
+                    userHandle = request.userHandle,
+                    platform = Platform.fromDecode(request.platform))
             val userName = extractUsername(request.token)
             val user = userRepository.findByUsername(userName)
             if (user != null) {
