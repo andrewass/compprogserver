@@ -30,7 +30,7 @@ class AuthenticationController @Autowired constructor(
     @PostMapping("/sign-up")
     fun signUpUser(@RequestBody request: SignUpRequest) :
             ResponseEntity<AuthenticationResponse>{
-        val newUser = userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.CONFLICT)
+        val newUser = userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
         val response  = authenticateAndGenerateJwt(newUser.username, newUser.password)
         return ResponseEntity.ok(response)
     }

@@ -1,14 +1,12 @@
 package com.compprogserver.controller
 
+import com.compprogserver.controller.request.AddProblemRequest
 import com.compprogserver.entity.problem.Problem
 import com.compprogserver.service.ProblemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -18,7 +16,13 @@ class ProblemController @Autowired constructor(
         private val problemService: ProblemService
 ){
     @GetMapping("/trending-problems")
-    fun getProblems() : ResponseEntity<Collection<Problem>> {
-        return ResponseEntity(problemService.getTrendingProblems(), HttpStatus.OK)
+    fun getProblems() : ResponseEntity<List<Problem>> {
+        return ResponseEntity(problemService.getPopularProblems(), HttpStatus.OK)
+    }
+
+    @PostMapping("/add-problem")
+    fun addProblem(@RequestBody request : AddProblemRequest) : HttpStatus{
+        val problem = problemService.addProblem(request)
+        return HttpStatus.OK
     }
 }

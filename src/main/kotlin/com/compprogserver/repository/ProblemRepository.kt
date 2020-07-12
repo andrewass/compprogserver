@@ -13,6 +13,8 @@ interface ProblemRepository : JpaRepository<Problem, Long> {
 
     fun findByProblemName(problemName : String) : Problem?
 
+    fun existsByProblemNameAndPlatform(problemName: String, platform: Platform) : Boolean
+
     @Query("SELECT p from Problem p")
-    fun findTrendingProblems(): Collection<Problem>
+    fun findPopularProblems(): List<Problem>
 }

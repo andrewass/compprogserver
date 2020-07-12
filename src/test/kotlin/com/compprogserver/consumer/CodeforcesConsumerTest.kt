@@ -22,6 +22,4 @@ internal class CodeforcesConsumerTest {
     private val codeForcesUrl = "http://codeforces.com/api"
 
 
-    fun `should get handle when successful response`() {
-    }
 }

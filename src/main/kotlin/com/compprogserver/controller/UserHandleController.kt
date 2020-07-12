@@ -16,7 +16,7 @@ class UserHandleController @Autowired constructor(
 ) {
 
     @PostMapping("get-userhandles")
-    fun getUserHandlesFromToken(@RequestBody request: GetUserHandlesRequest): ResponseEntity<List<UserHandle>> {
+    fun getUserHandlesFromUser(@RequestBody request: GetUserHandlesRequest): ResponseEntity<List<UserHandle>> {
         val userHandles = userHandleService.getUserHandlesFromUsername(request.username)
         return ResponseEntity.ok(userHandles)
     }
