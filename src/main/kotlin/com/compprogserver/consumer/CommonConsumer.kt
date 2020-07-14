@@ -1,6 +1,7 @@
 package com.compprogserver.consumer
 
-import org.springframework.beans.factory.annotation.Autowired
+import com.compprogserver.entity.UserHandle
+import com.compprogserver.entity.problem.Submission
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -10,16 +11,17 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
 @Component
-class CommonConsumer  @Autowired constructor(
-        private val restTemplate: RestTemplate
-) {
+abstract class CommonConsumer(private val restTemplate: RestTemplate) {
+
+    abstract fun getUserHandle(username: String): UserHandle?
+
+    abstract fun getUserSubmissions(userHandle: UserHandle): Set<Submission>
 
     fun exchange(url: String, vararg parameters: Pair<String, String>) =
             restTemplate.exchange(createURI(url, *parameters),
                     HttpMethod.GET,
                     HttpEntity("body", createHeaders()),
                     String::class.java)
-
 
     private fun createURI(url: String, vararg parameters: Pair<String, String>): String {
         val uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(url)
@@ -29,7 +31,7 @@ class CommonConsumer  @Autowired constructor(
         return uriComponentsBuilder.toUriString()
     }
 
-    fun createHeaders(): HttpHeaders {
+    private fun createHeaders(): HttpHeaders {
         val headers = HttpHeaders()
         headers.accept = listOf(MediaType.APPLICATION_JSON)
         headers.contentType = MediaType.APPLICATION_JSON

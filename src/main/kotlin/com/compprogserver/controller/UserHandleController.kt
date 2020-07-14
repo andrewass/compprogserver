@@ -23,8 +23,7 @@ class UserHandleController @Autowired constructor(
 
     @PostMapping("add-userhandle")
     fun addUserHandle(@RequestBody request: AddUserHandleRequest): ResponseEntity<List<UserHandle>> {
-        userHandleService.addUserHandle(request)
-        val userHandles = userHandleService.getUserHandlesFromUsername(request.token)
-        return ResponseEntity.ok(userHandles)
+        val userHandle = userHandleService.addUserHandle(request)
+        return ResponseEntity.ok(userHandle)
     }
 }

@@ -16,12 +16,6 @@ class CodeforcesController @Autowired constructor(
         private val codeforcesService: CodeforcesService
 ) {
 
-    @GetMapping("/handle")
-    fun getHandle(@RequestParam("username") username: String): ResponseEntity<UserHandle> {
-        val handle = codeforcesService.getUserHandle(username)
-        return ResponseEntity(handle, HttpStatus.OK)
-    }
-
     @GetMapping("/submissions")
     fun getUserSubmissions(@RequestParam("username") username: String): ResponseEntity<Set<Submission>> {
         val submissions = codeforcesService.getUserSubmissions(username)

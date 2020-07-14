@@ -3,6 +3,7 @@ package com.compprogserver.service
 import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform.CODEFORCES
+import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.repository.ContestRepository
@@ -23,8 +24,8 @@ class CodeforcesService @Autowired constructor(
         private val contestRepository: ContestRepository
 ) {
 
-    fun getUserHandle(userName: String): UserHandle? {
-        val fetchedHandle = codeforcesConsumer.getHandle(userName) ?: return null
+    fun getUserHandle(userName: String, user : User): UserHandle? {
+        val fetchedHandle = codeforcesConsumer.getUserHandle(userName) ?: return null
         val persistedUserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userName, CODEFORCES)
 
         return if (persistedUserHandle == null) {

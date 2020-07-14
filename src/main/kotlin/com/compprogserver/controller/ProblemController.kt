@@ -22,7 +22,7 @@ class ProblemController @Autowired constructor(
 
     @PostMapping("/add-problem")
     fun addProblem(@RequestBody request : AddProblemRequest) : HttpStatus{
-        val problem = problemService.addProblem(request)
+        problemService.addProblem(request)
         return HttpStatus.OK
     }
 }
