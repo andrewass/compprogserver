@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -19,11 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfiguration @Autowired constructor(
         private val customUserService: CustomUserService,
-        private val jwtRequestFilter: JwtRequestFilter
+        private val jwtRequestFilter: JwtRequestFilter,
+        private val passwordEncoder: PasswordEncoder
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(customUserService)
+                .passwordEncoder(passwordEncoder)
     }
 
     override fun configure(http: HttpSecurity) {
@@ -38,12 +41,6 @@ class SecurityConfiguration @Autowired constructor(
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
-    }
-
-    @Bean
-    fun getPassword(): PasswordEncoder {
-        //return BCryptPasswordEncoder()
-        return NoOpPasswordEncoder.getInstance()
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package com.compprogserver.service
 
+import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.entity.Contest
 import com.compprogserver.repository.ContestRepository
 import io.mockk.MockKAnnotations
@@ -16,6 +17,9 @@ internal class ContestServiceTest {
 
     @MockK
     private lateinit var contestRepository: ContestRepository
+
+    @MockK
+    private lateinit var codeforcesConsumer: CodeforcesConsumer
 
     @InjectMockKs
     private lateinit var contestService: ContestService

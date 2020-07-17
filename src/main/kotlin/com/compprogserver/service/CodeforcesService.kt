@@ -18,56 +18,13 @@ import javax.transaction.Transactional
 @Transactional
 class CodeforcesService @Autowired constructor(
         private val codeforcesConsumer: CodeforcesConsumer,
-        private val userHandleRepository: UserHandleRepository,
-        private val submissionRepository: SubmissionRepository,
-        private val problemRepository: ProblemRepository,
         private val contestRepository: ContestRepository
 ) {
-
-    fun getUserHandle(userName: String, user : User): UserHandle? {
-        val fetchedHandle = codeforcesConsumer.getUserHandle(userName) ?: return null
-        val persistedUserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userName, CODEFORCES)
-
-        return if (persistedUserHandle == null) {
-            userHandleRepository.save(fetchedHandle)
-        } else {
-            updatePersistedHandle(persistedUserHandle, fetchedHandle)
-            userHandleRepository.save(persistedUserHandle)
-        }
-    }
-
-    fun getUserSubmissions(username: String): Set<Submission> {
-        val userHandle: UserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(username, CODEFORCES)
-                ?: return emptySet()
-        val allSubmissions = submissionRepository.findAllByUserhandle(userHandle)
-        val fetchedSubmissions = codeforcesConsumer.getUserSubmissions(userHandle)
-        allSubmissions.addAll(fetchedSubmissions)
-        attachSubmissionsToProblems(allSubmissions)
-
-        return fetchedSubmissions
-    }
 
     fun getContests(): List<Contest> {
         val allContests = contestRepository.findContestByPlatform(CODEFORCES)
         val fetchedContests = codeforcesConsumer.getContests()
         allContests.addAll(fetchedContests)
-
         return contestRepository.saveAll(allContests)
-    }
-
-    private fun attachSubmissionsToProblems(submissions: Set<Submission>) {
-        for (submission in submissions) {
-            if (submission.id == null) {
-                val problem = problemRepository.findByProblemName(submission.problem!!.problemName)
-                        ?: problemRepository.save(submission.problem!!)
-                submission.problem = problem
-                problem.submissions.add(submission)
-                problemRepository.save(problem)
-            }
-        }
-    }
-
-    private fun updatePersistedHandle(persistedUserHandle: UserHandle, fetchedHandle: UserHandle) {
-        fetchedHandle.copyTo(persistedUserHandle)
     }
 }

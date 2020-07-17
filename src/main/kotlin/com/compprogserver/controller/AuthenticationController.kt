@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -30,17 +31,21 @@ class AuthenticationController @Autowired constructor(
     @PostMapping("/sign-up")
     fun signUpUser(@RequestBody request: SignUpRequest) :
             ResponseEntity<AuthenticationResponse>{
-        val newUser = userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        val response  = authenticateAndGenerateJwt(newUser.username, newUser.password)
+        userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        val response  = authenticateAndGenerateJwt(request.username, request.password)
         return ResponseEntity.ok(response)
     }
 
     @PostMapping("/sign-in")
     fun signInUser(@RequestBody request: AuthenticationRequest) :
-            ResponseEntity<AuthenticationResponse>{
-        val persistedUser = userService.getPersistedUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
-        val response = authenticateAndGenerateJwt(persistedUser.username, persistedUser.password)
-        return ResponseEntity.ok(response)
+            ResponseEntity<AuthenticationResponse> {
+        userService.getPersistedUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        return try {
+            val response = authenticateAndGenerateJwt(request.username, request.password)
+            ResponseEntity.ok(response)
+        } catch (e : AuthenticationException){
+            ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
     }
 
     private fun authenticateAndGenerateJwt(username : String, password : String) : AuthenticationResponse {
