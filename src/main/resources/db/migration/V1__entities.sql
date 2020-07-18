@@ -26,6 +26,7 @@ create table t_problem(
 	platform            varchar(50),
 	problem_tag         varchar(50),
 	problem_url         varchar(100),
+	rating              decimal(2,2),
 	primary key (problem_id)
 );
 

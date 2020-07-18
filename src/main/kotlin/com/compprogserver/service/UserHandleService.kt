@@ -1,12 +1,10 @@
 package com.compprogserver.service
 
-import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.controller.request.AddUserHandleRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.repository.UserHandleRepository
 import com.compprogserver.repository.UserRepository
-import com.compprogserver.util.extractUsername
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
@@ -17,7 +15,7 @@ import javax.transaction.Transactional
 class UserHandleService @Autowired constructor(
         private val userHandleRepository: UserHandleRepository,
         private val userRepository: UserRepository,
-        private val codeforcesConsumer: CodeforcesConsumer
+        private val submissionService: SubmissionService
 ) {
 
     fun getUserHandlesFromUsername(username: String): List<UserHandle> {
@@ -32,10 +30,10 @@ class UserHandleService @Autowired constructor(
                     platform = Platform.fromDecode(request.platform))
             val user = userRepository.findByUsername(request.username)
                     ?: throw UsernameNotFoundException("Username ${request.username} not found")
-            user.userHandles.add(userHandle)
             userHandle.user = user
+            user.userHandles.add(userHandle)
             userRepository.save(user)
-            getProblemsSolvedByUserHandle(userHandle)
+            getSubmissionsFromUserHandle(user.userHandles.last())
         }
     }
 
@@ -43,10 +41,9 @@ class UserHandleService @Autowired constructor(
         return !userHandleRepository.existsByUserHandleAndPlatform(request.userHandle, Platform.CODEFORCES)
     }
 
-    private fun getProblemsSolvedByUserHandle(userHandle : UserHandle){
-        if(userHandle.platform == Platform.CODEFORCES){
-            val submissions = codeforcesConsumer.getUserSubmissions(userHandle)
-
+    private fun getSubmissionsFromUserHandle(userHandle: UserHandle) {
+        if (userHandle.platform == Platform.CODEFORCES) {
+            submissionService.getSubmissionsByUserHandleAndPlatform(userHandle, Platform.CODEFORCES)
         }
     }
 }

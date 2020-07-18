@@ -23,19 +23,23 @@ class SubmissionService @Autowired constructor(
 
     fun getSubmissions(request: SubmissionRequest): Collection<Submission> {
         val userHandles = userHandleRepository.findUserHandleByUserHandle(request.handle!!)
-        return userHandles.flatMap { submissionRepository.findAllByUserhandle(it) }
+        return userHandles.flatMap { submissionRepository.findAllByUserHandle(it) }
     }
 
     fun getSubmissionsByUserHandleAndPlatform(userHandle: UserHandle, platform: Platform): Set<Submission> {
-        val allSubmissions = submissionRepository.findAllByUserhandle(userHandle)
-        if(platform == Platform.CODEFORCES) {
+        val allSubmissions = submissionRepository.findAllByUserHandle(userHandle)
+        return if(platform == Platform.CODEFORCES) {
             val fetchedSubmissions = codeforcesConsumer.getUserSubmissions(userHandle)
             allSubmissions.addAll(fetchedSubmissions)
             attachSubmissionsToProblems(allSubmissions)
-            return fetchedSubmissions
+            fetchedSubmissions
         } else{
-            return emptySet()
+            emptySet()
         }
+    }
+
+    fun getAllSubmissionsByIdForUserHandle(userHandle: UserHandle) : Set<Long> {
+        return submissionRepository.findAllSubmissionsForUserHandleById(userHandle)
     }
 
     private fun attachSubmissionsToProblems(submissions: Set<Submission>) {

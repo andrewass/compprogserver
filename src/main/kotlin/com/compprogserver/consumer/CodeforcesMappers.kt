@@ -37,7 +37,7 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
         if (submission.getString("verdict") == "OK") {
             submissionSet.add(Submission(
                     remoteId = submission.getInt("id"),
-                    userhandle = userHandle,
+                    userHandle = userHandle,
                     submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
                     problem = convertToProblem(submission.getJSONObject("problem")),
                     verdict = Verdict.SOLVED

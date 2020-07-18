@@ -21,7 +21,7 @@ class Submission(
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "HANDLE_ID")
-        val userhandle: UserHandle? = null,
+        val userHandle: UserHandle? = null,
 
         @Enumerated(EnumType.STRING)
         val verdict: Verdict? = null,

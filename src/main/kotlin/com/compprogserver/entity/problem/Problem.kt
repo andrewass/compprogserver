@@ -24,6 +24,8 @@ class Problem(
 
         val problemUrl: String = "",
 
+        var rating : Double = 0.00,
+
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
         val submissions: MutableList<Submission> = mutableListOf()
