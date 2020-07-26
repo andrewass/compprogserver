@@ -18,6 +18,7 @@ class SubmissionController @Autowired constructor(
     @GetMapping("/submissions")
     fun getAllSubmissions(@RequestBody submissionRequest: SubmissionRequest): ResponseEntity<Collection<Submission>> {
         val submissions = submissionService.getSubmissions(submissionRequest)
+
         return ResponseEntity(submissions, HttpStatus.OK)
     }
 }

@@ -24,16 +24,17 @@ class UserHandleService @Autowired constructor(
     }
 
     fun addUserHandle(request: AddUserHandleRequest) {
+        val platform = Platform.fromDecode(request.platform) ?: return
         if (userHandleNotExists(request)) {
             val userHandle = UserHandle(
                     userHandle = request.userHandle,
-                    platform = Platform.fromDecode(request.platform))
+                    platform = platform)
             val user = userRepository.findByUsername(request.username)
                     ?: throw UsernameNotFoundException("Username ${request.username} not found")
             userHandle.user = user
             user.userHandles.add(userHandle)
             userRepository.save(user)
-            getSubmissionsFromUserHandle(user.userHandles.last())
+            getSubmissionsFromUserHandle(user.userHandles.last(), platform)
         }
     }
 
@@ -41,9 +42,7 @@ class UserHandleService @Autowired constructor(
         return !userHandleRepository.existsByUserHandleAndPlatform(request.userHandle, Platform.CODEFORCES)
     }
 
-    private fun getSubmissionsFromUserHandle(userHandle: UserHandle) {
-        if (userHandle.platform == Platform.CODEFORCES) {
-            submissionService.getSubmissionsByUserHandleAndPlatform(userHandle, Platform.CODEFORCES)
-        }
+    private fun getSubmissionsFromUserHandle(userHandle: UserHandle, platform: Platform) {
+        submissionService.getSubmissionsByUserHandleAndPlatform(userHandle, platform)
     }
 }

@@ -19,7 +19,8 @@ class ProblemService @Autowired constructor(
 ) {
 
     fun getPopularProblems(page: Int, size: Int): Page<Problem> {
-        val pageable: Pageable = PageRequest.of(page, size)
+        val pageable = PageRequest.of(page, size)
+
         return problemRepository.findAllByOrderByRatingDesc(pageable)
     }
 
@@ -36,6 +37,6 @@ class ProblemService @Autowired constructor(
     fun getAllSolvedProblemsForUser(username: String): List<Long> {
         val userhandles = userHandleService.getUserHandlesFromUsername(username)
 
-        return userhandles.flatMap { submissionService.getAllSubmissionsByIdForUserHandle(it) }
+        return userhandles.flatMap { submissionService.getAllProblemIdForSubmissionsByUserHandle(it) }
     }
 }

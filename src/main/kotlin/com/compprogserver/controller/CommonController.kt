@@ -18,6 +18,7 @@ class CommonController @Autowired constructor(
     @GetMapping("/platforms")
     fun getAllPlatforms(): ResponseEntity<List<String>> {
         val platforms = commonService.getAllPlatforms()
+
         return ResponseEntity.ok(platforms)
     }
 }

@@ -23,6 +23,7 @@ class SubmissionService @Autowired constructor(
 
     fun getSubmissions(request: SubmissionRequest): Collection<Submission> {
         val userHandles = userHandleRepository.findUserHandleByUserHandle(request.handle!!)
+
         return userHandles.flatMap { submissionRepository.findAllByUserHandle(it) }
     }
 
@@ -38,8 +39,8 @@ class SubmissionService @Autowired constructor(
         }
     }
 
-    fun getAllSubmissionsByIdForUserHandle(userHandle: UserHandle) : Set<Long> {
-        return submissionRepository.findAllSubmissionsForUserHandleById(userHandle)
+    fun getAllProblemIdForSubmissionsByUserHandle(userHandle: UserHandle) : Set<Long> {
+        return submissionRepository.findAllProblemIdFromSubmissionsByUserHandleBy(userHandle)
     }
 
     private fun attachSubmissionsToProblems(submissions: Set<Submission>) {

@@ -18,6 +18,7 @@ class ProblemController @Autowired constructor(
     @GetMapping("/solved-problems")
     fun getSolvedProblemsByIdForUser(@RequestParam username : String) : ResponseEntity<List<Long>>{
         val problems = problemService.getAllSolvedProblemsForUser(username)
+
         return ResponseEntity.ok(problems)
     }
 
