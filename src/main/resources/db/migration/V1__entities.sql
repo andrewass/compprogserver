@@ -10,6 +10,7 @@ create table t_user(
 create table t_user_handle(
     handle_id           bigint(20)  not null auto_increment,
     user_id             bigint(20) not null,
+    external_id         int(11),
     user_handle         varchar(50)  not null,
     rating              int(11),
     max_rating          int(11),
@@ -26,7 +27,8 @@ create table t_problem(
 	platform            varchar(50),
 	problem_tag         varchar(50),
 	problem_url         varchar(100),
-	rating              decimal(2,2),
+	rating              int(11),
+	raters              int(11),
 	primary key (problem_id)
 );
 

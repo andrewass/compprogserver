@@ -24,7 +24,9 @@ class Problem(
 
         val problemUrl: String = "",
 
-        var rating : Double = 0.00,
+        var rating : Int = 3,
+
+        var raters : Int = 0,
 
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])

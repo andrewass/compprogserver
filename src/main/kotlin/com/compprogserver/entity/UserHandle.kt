@@ -11,6 +11,8 @@ class UserHandle(
         @Column(name = "HANDLE_ID")
         val id: Long? = null,
 
+        val externalId: Long? = null,
+
         @Column(name = "USER_HANDLE", nullable = false)
         val userHandle: String = "",
 

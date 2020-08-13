@@ -9,10 +9,12 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.time.LocalDateTime
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ContestServiceTest {
 
     @MockK
@@ -24,7 +26,7 @@ internal class ContestServiceTest {
     @InjectMockKs
     private lateinit var contestService: ContestService
 
-    @BeforeEach
+    @BeforeAll
     private fun setUp() = MockKAnnotations.init(this)
 
     private val currentTime = LocalDateTime.now()
@@ -64,6 +66,4 @@ internal class ContestServiceTest {
             assertTrue(contests[i - 1].startTime!!.isBefore(contests[i].startTime))
         }
     }
-
-
 }

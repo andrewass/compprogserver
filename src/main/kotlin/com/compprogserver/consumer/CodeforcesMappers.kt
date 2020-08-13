@@ -11,7 +11,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-fun convertToUserHandle(response: String): UserHandle? {
+fun convertToUserHandleCF(response: String): UserHandle? {
     val jsonBody = JSONObject(response)
     val handles = jsonBody.getJSONArray("result")
     if (handles.isEmpty) {
@@ -32,6 +32,7 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
     val submissionSet = mutableSetOf<Submission>()
     val jsonBody = JSONObject(response)
     val submissions = jsonBody.getJSONArray("result")
+
     for (i in 0 until submissions.length()) {
         val submission = submissions.getJSONObject(i)
         if (submission.getString("verdict") == "OK") {
@@ -44,6 +45,7 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
             ))
         }
     }
+
     return submissionSet
 }
 
@@ -51,6 +53,7 @@ fun convertToContests(response: String): Set<Contest> {
     val contestSet = mutableSetOf<Contest>()
     val jsonBody = JSONObject(response)
     val contests = jsonBody.getJSONArray("result")
+
     for (i in 0 until contests.length()) {
         val contest = contests.getJSONObject(i)
         contestSet.add(Contest(
@@ -61,6 +64,7 @@ fun convertToContests(response: String): Set<Contest> {
                 remoteId = contest.getInt("id")
         ))
     }
+
     return contestSet
 }
 

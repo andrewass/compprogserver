@@ -2,6 +2,7 @@ package com.compprogserver.consumer
 
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
+import com.compprogserver.exception.UserHandleNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -9,19 +10,20 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class UvaConsumer @Autowired constructor(
-        private val restTemplate: RestTemplate
+        restTemplate: RestTemplate
 ) : CommonConsumer(restTemplate) {
 
-    @Value(value = "\${codeforces.url}")
-    lateinit var uhuntUrl: String
-
+    @Value(value = "\${uhunt.url}")
+    private lateinit var uhuntUrl: String
+    
     override fun getUserHandle(username: String): UserHandle? {
         val url = "$uhuntUrl/uname2uid/$username"
         val response = exchange(url)
+
         return if (response.statusCode.is2xxSuccessful) {
-            null
+            convertToUserHandleUva(response.body!!, username)
         } else {
-            null
+            throw UserHandleNotFoundException("Userhandle for $username was not found");
         }
     }
 
