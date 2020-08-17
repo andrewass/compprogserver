@@ -1,6 +1,6 @@
 package com.compprogserver.entity
 
-enum class Platform(val decode : String) {
+enum class Platform(val decode: String) {
 
 
     CODEFORCES("Codeforces"),
@@ -15,6 +15,6 @@ enum class Platform(val decode : String) {
 
     companion object {
         private val map = values().associateBy(Platform::decode)
-        fun fromDecode(decode : String) = map[decode]
-     }
+        fun fromDecode(decode: String) = map[decode]
+    }
 }

@@ -1,13 +1,12 @@
 package com.compprogserver.consumer
 
 import com.compprogserver.entity.Platform
-import com.compprogserver.exception.UserHandleNotFoundException
+import com.compprogserver.exception.ExternalEndpointException
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -55,6 +54,6 @@ internal class UvaConsumerTest {
             restTemplate.exchange(userHandleUrl, HttpMethod.GET, any(), String::class.java)
         } returns ResponseEntity(HttpStatus.NOT_FOUND)
 
-        assertThrows<UserHandleNotFoundException> { uvaConsumer.getUserHandle(testUser) }
+        assertThrows<ExternalEndpointException> { uvaConsumer.getUserHandle(testUser) }
     }
 }

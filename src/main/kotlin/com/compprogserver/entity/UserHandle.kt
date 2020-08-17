@@ -1,5 +1,6 @@
 package com.compprogserver.entity
 
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -33,7 +34,7 @@ class UserHandle(
         @ManyToOne
         @JoinColumn(name = "USER_ID", nullable = false)
         var user: User? = null
-) {
+) : Serializable {
 
     fun copyTo(destination: UserHandle) {
         destination.rating = rating

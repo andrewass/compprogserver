@@ -2,7 +2,7 @@ package com.compprogserver.consumer
 
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
-import com.compprogserver.exception.UserHandleNotFoundException
+import com.compprogserver.exception.ExternalEndpointException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -23,7 +23,7 @@ class UvaConsumer @Autowired constructor(
         return if (response.statusCode.is2xxSuccessful) {
             convertToUserHandleUva(response.body!!, username)
         } else {
-            throw UserHandleNotFoundException("Userhandle for $username was not found");
+            throw ExternalEndpointException("Status Code : ${response.statusCode}");
         }
     }
 

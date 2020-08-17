@@ -2,7 +2,6 @@ package com.compprogserver.consumer
 
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
-import com.compprogserver.exception.UserHandleNotFoundException
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -17,7 +16,6 @@ abstract class CommonConsumer(private val restTemplate: RestTemplate) {
     abstract fun getUserHandle(username: String): UserHandle?
 
     abstract fun getUserSubmissions(userHandle: UserHandle): Set<Submission>
-
 
     fun exchange(url: String, vararg parameters: Pair<String, String>) =
             restTemplate.exchange(createURI(url, *parameters),

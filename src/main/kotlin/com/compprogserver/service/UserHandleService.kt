@@ -25,10 +25,9 @@ class UserHandleService @Autowired constructor(
 
     fun addUserHandle(request: AddUserHandleRequest) {
         val platform = Platform.fromDecode(request.platform) ?: return
+
         if (userHandleNotExists(request)) {
-            val userHandle = UserHandle(
-                    userHandle = request.userHandle,
-                    platform = platform)
+            val userHandle = UserHandle(userHandle = request.userHandle, platform = platform)
             val user = userRepository.findByUsername(request.username)
                     ?: throw UsernameNotFoundException("Username ${request.username} not found")
             userHandle.user = user

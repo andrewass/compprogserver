@@ -24,4 +24,12 @@ class User(
         @JsonIgnore
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         val userHandles : MutableList<UserHandle> = mutableListOf()
-)
+){
+        fun addUserHandle(userHandle: UserHandle){
+                userHandles.add(userHandle)
+        }
+
+        fun addUserHandles(userHandleList: List<UserHandle>){
+                userHandles.addAll(userHandleList)
+        }
+}
