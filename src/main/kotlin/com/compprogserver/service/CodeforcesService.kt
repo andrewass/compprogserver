@@ -25,6 +25,7 @@ class CodeforcesService @Autowired constructor(
         val allContests = contestRepository.findContestByPlatform(CODEFORCES)
         val fetchedContests = codeforcesConsumer.getContests()
         allContests.addAll(fetchedContests)
+
         return contestRepository.saveAll(allContests)
     }
 }

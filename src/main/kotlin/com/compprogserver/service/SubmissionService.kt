@@ -29,6 +29,7 @@ class SubmissionService @Autowired constructor(
 
     fun getSubmissionsByUserHandleAndPlatform(userHandle: UserHandle, platform: Platform): Set<Submission> {
         val allSubmissions = submissionRepository.findAllByUserHandle(userHandle)
+
         return if(platform == Platform.CODEFORCES) {
             val fetchedSubmissions = codeforcesConsumer.getUserSubmissions(userHandle)
             allSubmissions.addAll(fetchedSubmissions)

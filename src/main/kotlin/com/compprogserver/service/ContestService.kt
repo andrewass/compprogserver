@@ -15,6 +15,7 @@ class ContestService @Autowired constructor(
 ) {
     fun getUpcomingContests(): List<Contest> {
         val contests = contestRepository.findContestByStartTimeAfter(LocalDateTime.now())
+
         return contests.sortedBy { it.startTime }
     }
 
@@ -25,6 +26,7 @@ class ContestService @Autowired constructor(
         }
         val persistedContests = contestRepository.findContestByPlatform(platform)
         persistedContests.addAll(contests)
+
         return contestRepository.saveAll(persistedContests)
     }
 }

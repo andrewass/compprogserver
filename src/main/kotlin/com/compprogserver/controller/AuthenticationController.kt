@@ -25,6 +25,7 @@ class AuthenticationController @Autowired constructor(
     fun createAuthenticationToken(@RequestBody request: AuthenticationRequest):
             ResponseEntity<AuthenticationResponse> {
         val response = authenticateAndGenerateJwt(request.username, request.password)
+
         return ResponseEntity.ok(response)
     }
 
@@ -33,6 +34,7 @@ class AuthenticationController @Autowired constructor(
             ResponseEntity<AuthenticationResponse>{
         userService.addNewUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
         val response  = authenticateAndGenerateJwt(request.username, request.password)
+
         return ResponseEntity.ok(response)
     }
 
@@ -40,6 +42,7 @@ class AuthenticationController @Autowired constructor(
     fun signInUser(@RequestBody request: AuthenticationRequest) :
             ResponseEntity<AuthenticationResponse> {
         userService.getPersistedUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
+
         return try {
             val response = authenticateAndGenerateJwt(request.username, request.password)
             ResponseEntity.ok(response)
@@ -49,9 +52,9 @@ class AuthenticationController @Autowired constructor(
     }
 
     private fun authenticateAndGenerateJwt(username : String, password : String) : AuthenticationResponse {
-        authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(username, password))
+        authenticationManager.authenticate(UsernamePasswordAuthenticationToken(username, password))
         val userDetails = userService.loadUserByUsername(username)
+
         return AuthenticationResponse(generateToken(userDetails), username)
     }
 }

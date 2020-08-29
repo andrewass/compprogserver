@@ -1,36 +1,29 @@
 package com.compprogserver.controller
 
 
-import com.compprogserver.common.CommonIntegrationTest
+import com.compprogserver.common.AbstractIntegrationTest
 import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.hasSize
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
-@ActiveProfiles("test")
 @WithMockUser
 @AutoConfigureMockMvc
-internal class UserHandleControllerTest : CommonIntegrationTest() {
+internal class UserHandleControllerTest : AbstractIntegrationTest() {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
 
     private val userHandleList = listOf(
             UserHandle(userHandle = "cfHandle", platform = Platform.CODEFORCES),
@@ -48,7 +41,7 @@ internal class UserHandleControllerTest : CommonIntegrationTest() {
 
     @Test
     fun `should return expected status and all user handles of user`() {
-        addUser(userHandleList)
+        createUserWithUserHandles(userHandleList)
 
         mockMvc.perform(post("/userhandle/get-userhandles")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +57,7 @@ internal class UserHandleControllerTest : CommonIntegrationTest() {
 
     @Test
     fun `should return empty list when no user handles found for user`() {
-        addUser(emptyList())
+        createUserWithUserHandles(emptyList())
 
         mockMvc.perform(post("/userhandle/get-userhandles")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +72,7 @@ internal class UserHandleControllerTest : CommonIntegrationTest() {
         return objectMapper.writeValueAsString(request)
     }
 
-    private fun addUser(userHandles: List<UserHandle>) {
+    private fun createUserWithUserHandles(userHandles: List<UserHandle>) {
         val user = userRepository.save(User(username = username))
         userHandles.forEach { it.user = user }
         user.addUserHandles(userHandles)

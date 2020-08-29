@@ -28,7 +28,6 @@ class KafkaConfiguration {
     @Bean
     fun kafkaAdmin(): KafkaAdmin {
         val config = HashMap<String, Any>()
-
         return KafkaAdmin(config)
     }
 
@@ -44,6 +43,7 @@ class KafkaConfiguration {
         config[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress
         config[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         config[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = JsonSerializer::class.java
+
         return DefaultKafkaProducerFactory(config)
     }
 
@@ -52,6 +52,7 @@ class KafkaConfiguration {
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Contest> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, Contest>()
         factory.consumerFactory = contestConsumerConfig()
+
         return factory
     }
 

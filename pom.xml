@@ -201,9 +201,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.4.3</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/compprog_db?serverTimezone=UTC</url>
-                    <user>root</user>
-                    <password>rootpassword</password>
+                    <url>jdbc:mysql://comp-prog-mysql:3306/compprogdb?serverTimezone=UTC</url>
+                    <user>user</user>
+                    <password>password</password>
                 </configuration>
             </plugin>
         </plugins>
