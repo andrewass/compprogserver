@@ -19,7 +19,7 @@ class CustomUserService @Autowired constructor(
     override fun loadUserByUsername(userName: String): UserDetails {
         val persistedUser = userRepository.findByUsername(userName)
 
-        return User(persistedUser!!.username, persistedUser.password, emptyList())
+        return User(persistedUser.get().username, persistedUser.get().password, emptyList())
     }
 
     fun addNewUser(request: SignUpRequest): com.compprogserver.entity.User? {
@@ -34,7 +34,7 @@ class CustomUserService @Autowired constructor(
         return userRepository.save(user)
     }
 
-    fun getPersistedUser(request: AuthenticationRequest): com.compprogserver.entity.User? {
-        return userRepository.findByUsername(request.username)
+    fun getPersistedUser(request: AuthenticationRequest): com.compprogserver.entity.User {
+        return userRepository.findByUsername(request.username).get()
     }
 }

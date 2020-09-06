@@ -1,6 +1,7 @@
 package com.compprogserver.entity.problem
 
 import com.compprogserver.entity.Platform
+import com.compprogserver.entity.ProblemRating
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
@@ -30,7 +31,12 @@ class Problem(
 
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])
-        val submissions: MutableList<Submission> = mutableListOf()
+        val submissions: MutableList<Submission> = mutableListOf(),
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "problem")
+        val ratings : MutableList<ProblemRating> = mutableListOf()
+
 ) {
     override fun hashCode() = problemName.hashCode()
 

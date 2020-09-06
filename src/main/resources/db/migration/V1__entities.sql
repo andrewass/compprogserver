@@ -33,10 +33,13 @@ create table t_problem(
 );
 
 create table t_problem_rating(
-	problem_id      bigint(20) not null,
-	user_id         bigint(20) not null,
-	rating          int(11) not null,
-	primary key (problem_id, user_id)
+	problem_rating_id   bigint(20) not null auto_increment,
+	problem_id          bigint(20) not null,
+	user_id             bigint(20) not null,
+	rating              int(11) not null,
+	primary key (problem_rating_id),
+	foreign key (problem_id)    references t_problem(problem_id),
+	foreign key (user_id)       references t_user(user_id)
 );
 
 create table t_submission(

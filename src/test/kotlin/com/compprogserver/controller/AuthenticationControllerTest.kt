@@ -25,7 +25,7 @@ internal class AuthenticationControllerTest : AbstractIntegrationTest() {
 
     @BeforeEach
     fun setupEach() {
-        userRepository.deleteAll()
+        clearRepositories()
     }
 
     @Test

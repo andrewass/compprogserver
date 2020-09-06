@@ -6,7 +6,6 @@ import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,9 +33,8 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
     private val username = "testUser"
 
     @BeforeEach
-    fun setup(){
-        userRepository.deleteAll()
-        contestRepository.deleteAll()
+    fun setup() {
+        clearRepositories()
     }
 
     @Test
@@ -69,6 +67,7 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
 
     private fun createGetHandlesRequest(): String {
         val request = GetUserHandlesRequest(username = username)
+
         return objectMapper.writeValueAsString(request)
     }
 

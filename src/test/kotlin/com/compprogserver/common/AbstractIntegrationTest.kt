@@ -1,7 +1,10 @@
 package com.compprogserver.common
 
 import com.compprogserver.repository.ContestRepository
+import com.compprogserver.repository.ProblemRatingRepository
+import com.compprogserver.repository.ProblemRepository
 import com.compprogserver.repository.UserRepository
+import com.compprogserver.service.SubmissionService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,6 +24,12 @@ abstract class AbstractIntegrationTest {
     protected lateinit var contestRepository: ContestRepository
 
     @Autowired
+    protected lateinit var problemRatingRepository: ProblemRatingRepository
+
+    @Autowired
+    protected lateinit var problemRepository: ProblemRepository
+
+    @Autowired
     protected lateinit var objectMapper: ObjectMapper
 
     companion object {
@@ -28,5 +37,12 @@ abstract class AbstractIntegrationTest {
         val container = CustomMySQLContainer()
                 .withUsername("root")
                 .withPassword("")
+    }
+
+    fun clearRepositories(){
+        problemRatingRepository.deleteAll()
+        userRepository.deleteAll()
+        contestRepository.deleteAll()
+        problemRepository.deleteAll()
     }
 }

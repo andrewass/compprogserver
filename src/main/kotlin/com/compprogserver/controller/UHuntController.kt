@@ -12,5 +12,4 @@ class UHuntController {
     fun findUserIdByUsernamne(){
 
     }
-
 }
