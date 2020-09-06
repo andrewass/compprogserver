@@ -1,6 +1,7 @@
 package com.compprogserver.service
 
 import com.compprogserver.controller.request.AddProblemRequest
+import com.compprogserver.controller.request.AddRatingRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.problem.Problem
 import com.compprogserver.exception.PlatformNotFoundException
@@ -37,5 +38,9 @@ class ProblemService @Autowired constructor(
         val userhandles = userHandleService.getUserHandlesFromUsername(username)
 
         return userhandles.flatMap { submissionService.getAllProblemIdForSubmissionsByUserHandle(it) }
+    }
+
+    fun addRating(request: AddRatingRequest) {
+
     }
 }

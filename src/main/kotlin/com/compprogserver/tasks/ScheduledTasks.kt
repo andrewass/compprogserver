@@ -21,7 +21,7 @@ class ScheduledTasks @Autowired constructor(
         contestService.getContestsFromPlatform(Platform.CODEFORCES)
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 100000)
     fun updatePersistedProblemsFromUserHandles() {
         log.info("Updating problems from user handles")
     }

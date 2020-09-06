@@ -45,7 +45,6 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
             ))
         }
     }
-
     return submissionSet
 }
 
@@ -64,7 +63,6 @@ fun convertToContests(response: String): Set<Contest> {
                 remoteId = contest.getInt("id")
         ))
     }
-
     return contestSet
 }
 

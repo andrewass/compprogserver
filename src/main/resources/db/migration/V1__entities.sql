@@ -32,6 +32,13 @@ create table t_problem(
 	primary key (problem_id)
 );
 
+create table t_problem_rating(
+	problem_id      bigint(20) not null,
+	user_id         bigint(20) not null,
+	rating          int(11) not null,
+	primary key (problem_id, user_id)
+);
+
 create table t_submission(
     submission_id       bigint(20)  not null auto_increment,
     remote_id           int(11),

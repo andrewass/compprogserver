@@ -26,5 +26,7 @@ abstract class AbstractIntegrationTest {
     companion object {
         @Container
         val container = CustomMySQLContainer()
+                .withUsername("root")
+                .withPassword("")
     }
 }

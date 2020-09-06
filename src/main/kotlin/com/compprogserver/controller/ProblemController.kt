@@ -1,6 +1,7 @@
 package com.compprogserver.controller
 
 import com.compprogserver.controller.request.AddProblemRequest
+import com.compprogserver.controller.request.AddRatingRequest
 import com.compprogserver.controller.response.GetProblemsResponse
 import com.compprogserver.service.ProblemService
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,6 +38,14 @@ class ProblemController @Autowired constructor(
     @PostMapping("/add-problem")
     fun addProblem(@RequestBody request: AddProblemRequest): HttpStatus {
         problemService.addProblem(request)
+
+        return HttpStatus.OK
+    }
+
+    @PostMapping("/add-rating")
+    fun addRating(@RequestBody request: AddRatingRequest): HttpStatus {
+        problemService.addRating(request)
+
         return HttpStatus.OK
     }
 }
