@@ -23,17 +23,27 @@ class User(
 
         @JsonIgnore
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-        val userHandles : MutableList<UserHandle> = mutableListOf(),
+        val userHandles: MutableList<UserHandle> = mutableListOf(),
 
         @JsonIgnore
         @OneToMany(mappedBy = "user")
-        val problemRatings : MutableList<ProblemRating> = mutableListOf()
-){
-        fun addUserHandle(userHandle: UserHandle){
-                userHandles.add(userHandle)
-        }
+        val problemRatings: MutableList<ProblemRating> = mutableListOf()
+) {
+    fun addUserHandle(userHandle: UserHandle) {
+        userHandles.add(userHandle)
+    }
 
-        fun addUserHandles(userHandleList: List<UserHandle>){
-                userHandles.addAll(userHandleList)
+    fun addUserHandles(userHandleList: List<UserHandle>) {
+        userHandles.addAll(userHandleList)
+    }
+
+    override fun hashCode() = username.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is User) {
+            other.username == username
+        } else {
+            false
         }
+    }
 }

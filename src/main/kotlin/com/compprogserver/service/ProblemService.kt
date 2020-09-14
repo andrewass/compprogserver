@@ -1,12 +1,12 @@
 package com.compprogserver.service
 
-import com.compprogserver.controller.request.AddProblemRequest
 import com.compprogserver.controller.request.AddProblemRatingRequest
+import com.compprogserver.controller.request.AddProblemRequest
 import com.compprogserver.entity.Platform
+import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.problem.Problem
-import com.compprogserver.entity.ProblemRating
-import com.compprogserver.exception.PlatformNotFoundException
+import com.compprogserver.exception.EntityNotFoundException
 import com.compprogserver.repository.ProblemRatingRepository
 import com.compprogserver.repository.ProblemRepository
 import com.compprogserver.repository.UserRepository
@@ -32,7 +32,7 @@ class ProblemService @Autowired constructor(
 
     fun addProblem(request: AddProblemRequest) {
         val platform = Platform.fromDecode(request.platform)
-                ?: throw PlatformNotFoundException("Platform ${request.platform} not found")
+                ?: throw EntityNotFoundException("Platform : ${request.platform}")
 
         if (!problemRepository.existsByProblemNameAndPlatform(request.problemName, platform)) {
             val problem = Problem(problemName = request.problemName, platform = platform)
@@ -46,28 +46,40 @@ class ProblemService @Autowired constructor(
         return userhandles.flatMap { submissionService.getAllProblemIdForSubmissionsByUserHandle(it) }
     }
 
-    fun addProblemRating(requestProblem: AddProblemRatingRequest): ProblemRating {
-        val user = userRepository.findByUsername(requestProblem.username).get()
-        val problem = problemRepository.findById(requestProblem.problemId).get()
+    fun addProblemRating(request: AddProblemRatingRequest) {
+        val user = userRepository.findByUsername(request.username).get()
+        val problem = problemRepository.findById(request.problemId).get()
         val previousRating = problemRatingRepository.findByProblemAndUser(problem, user)
 
-        return if (previousRating.isPresent) {
-            updateProblemRating(previousRating.get(), requestProblem.rating)
+        if (previousRating.isPresent) {
+            val prevRating = previousRating.get()
+            updateRatingOfProblem(problem, prevRating.rating, request.rating)
+            updateUsersProblemRating(prevRating, request.rating)
         } else {
-            createProblemRating(problem, user, requestProblem.rating)
+            updateRatingOfProblem(problem, 0, request.rating)
+            createProblemRating(problem, user, request.rating)
         }
     }
 
-    private fun updateProblemRating(previousRating: ProblemRating, rating: Int) : ProblemRating {
+    private fun updateRatingOfProblem(problem: Problem, previousRating: Int, newRating: Int) {
+        problem.rateSum += (newRating - previousRating)
+        problem.rateSum = kotlin.math.max(problem.rateSum, 1)
+
+        if (previousRating == 0) {
+            problem.rateCount++
+        }
+        problem.rating = (problem.rateSum / problem.rateCount).toInt()
+        problemRepository.save(problem)
+    }
+
+    private fun updateUsersProblemRating(previousRating: ProblemRating, rating: Int): ProblemRating {
         previousRating.rating = rating
 
         return problemRatingRepository.save(previousRating)
     }
 
-    private fun createProblemRating(problem: Problem, user: User, rating: Int): ProblemRating {
+    private fun createProblemRating(problem: Problem, user: User, rating: Int) {
         val problemRating = ProblemRating(problem = problem, user = user, rating = rating)
-
-        return problemRatingRepository.save(problemRating)
+        problemRatingRepository.save(problemRating)
     }
-
 }

@@ -41,7 +41,7 @@ class AuthenticationController @Autowired constructor(
     @PostMapping("/sign-in")
     fun signInUser(@RequestBody request: AuthenticationRequest) :
             ResponseEntity<AuthenticationResponse> {
-        userService.getPersistedUser(request) ?: return ResponseEntity(HttpStatus.UNAUTHORIZED)
+        userService.getPersistedUser(request)
 
         return try {
             val response = authenticateAndGenerateJwt(request.username, request.password)

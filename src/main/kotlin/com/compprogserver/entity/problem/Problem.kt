@@ -27,7 +27,9 @@ class Problem(
 
         var rating : Int = 3,
 
-        var raters : Int = 0,
+        var rateSum : Long = 3L,
+
+        var rateCount : Int = 1,
 
         @JsonIgnore
         @OneToMany(mappedBy = "problem", cascade = [CascadeType.ALL])

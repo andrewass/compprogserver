@@ -28,7 +28,8 @@ create table t_problem(
 	problem_tag         varchar(50),
 	problem_url         varchar(100),
 	rating              int(11),
-	raters              int(11),
+	rate_count          int(11),
+	rate_sum            bigint(20),
 	primary key (problem_id)
 );
 
