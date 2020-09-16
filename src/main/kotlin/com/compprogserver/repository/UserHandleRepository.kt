@@ -6,13 +6,14 @@ import com.compprogserver.entity.UserHandle
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 interface UserHandleRepository : JpaRepository<UserHandle, Long> {
 
     fun findUserHandleByUserHandle(userHandle: String): List<UserHandle>
 
-    fun findUserHandleByUserHandleAndPlatform(userHandle: String, platform: Platform): UserHandle?
+    fun findUserHandleByUserHandleAndPlatform(userHandle: String, platform: Platform): Optional<UserHandle>
 
     fun existsByUserHandleAndPlatform(username: String, platform: Platform): Boolean
 

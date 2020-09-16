@@ -13,8 +13,7 @@ import javax.transaction.Transactional
 @Transactional
 class UserHandleService @Autowired constructor(
         private val userHandleRepository: UserHandleRepository,
-        private val userRepository: UserRepository,
-        private val submissionService: SubmissionService
+        private val userRepository: UserRepository
 ) {
 
     fun getUserHandlesFromUsername(username: String): List<UserHandle> {
@@ -31,15 +30,10 @@ class UserHandleService @Autowired constructor(
             userHandle.user = user
             user.userHandles.add(userHandle)
             userRepository.save(user)
-            getSubmissionsFromUserHandle(user.userHandles.last(), platform)
         }
     }
 
     private fun userHandleNotExists(request: AddUserHandleRequest): Boolean {
         return !userHandleRepository.existsByUserHandleAndPlatform(request.userHandle, Platform.CODEFORCES)
-    }
-
-    private fun getSubmissionsFromUserHandle(userHandle: UserHandle, platform: Platform) {
-        submissionService.getSubmissionsByUserHandleAndPlatform(userHandle, platform)
     }
 }

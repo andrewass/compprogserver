@@ -26,9 +26,10 @@ class ProblemController @Autowired constructor(
     }
 
     @GetMapping("/popular-problems")
-    fun getProblems(@RequestParam(defaultValue = "0") page: Int,
+    fun getProblems(@RequestParam(required = false) username: String?,
+                    @RequestParam(defaultValue = "0") page: Int,
                     @RequestParam(defaultValue = "15") size: Int): ResponseEntity<GetProblemsResponse> {
-        val responsePage = problemService.getPopularProblems(page, size)
+        val responsePage = problemService.getPopularProblems(username, page, size)
         val response = GetProblemsResponse(
                 totalElements = responsePage.totalElements,
                 totalPages = responsePage.totalPages,

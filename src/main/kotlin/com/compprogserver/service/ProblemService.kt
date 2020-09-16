@@ -6,6 +6,7 @@ import com.compprogserver.entity.Platform
 import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.problem.Problem
+import com.compprogserver.entity.problem.ProblemWrapper
 import com.compprogserver.exception.EntityNotFoundException
 import com.compprogserver.repository.ProblemRatingRepository
 import com.compprogserver.repository.ProblemRepository
@@ -24,11 +25,13 @@ class ProblemService @Autowired constructor(
         private val problemRatingRepository: ProblemRatingRepository
 ) {
 
-    fun getPopularProblems(page: Int, size: Int): Page<Problem> {
+    fun getPopularProblems(username : String?, page: Int, size: Int): Page<ProblemWrapper> {
         val pageable = PageRequest.of(page, size)
+        val problems = problemRepository.findAllByOrderByRatingDesc(pageable)
 
-        return problemRepository.findAllByOrderByRatingDesc(pageable)
+        return wrapProblems(problems, username)
     }
+
 
     fun addProblem(request: AddProblemRequest) {
         val platform = Platform.fromDecode(request.platform)
@@ -58,6 +61,19 @@ class ProblemService @Autowired constructor(
         } else {
             updateRatingOfProblem(problem, 0, request.rating)
             createProblemRating(problem, user, request.rating)
+        }
+    }
+
+    private fun wrapProblems(problems: Page<Problem>, username: String?): Page<ProblemWrapper> {
+        return problems.map { ProblemWrapper(problem = it, solved = isSolvedByUser(it, username)) }
+
+    }
+
+    private fun isSolvedByUser(problem: Problem, username: String?): Boolean {
+        return if(username != null){
+            true
+        } else {
+            false
         }
     }
 

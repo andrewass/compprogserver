@@ -1,5 +1,6 @@
 package com.compprogserver.entity.problem
 
+import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -21,12 +22,16 @@ class Submission(
 
         @ManyToOne(optional = false)
         @JoinColumn(name = "HANDLE_ID")
-        val userHandle: UserHandle? = null,
+        val userHandle: UserHandle,
+
+        @ManyToOne(optional = false)
+        @JoinColumn(name = "USER_ID")
+        val user: User,
 
         @Enumerated(EnumType.STRING)
-        val verdict: Verdict? = null,
+        val verdict: Verdict,
 
-        val submitted: LocalDateTime? = null
+        val submitted: LocalDateTime
 ) {
 
     override fun hashCode() = remoteId.hashCode()

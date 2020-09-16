@@ -1,9 +1,9 @@
 package com.compprogserver.controller.response
 
-import com.compprogserver.entity.problem.Problem
+import com.compprogserver.entity.problem.ProblemWrapper
 
 class GetProblemsResponse(
         val totalPages: Int = 0,
         val totalElements: Long = 0L,
-        val problems: List<Problem>
+        val problems: List<ProblemWrapper>
 )
