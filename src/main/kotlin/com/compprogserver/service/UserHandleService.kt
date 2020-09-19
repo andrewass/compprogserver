@@ -25,9 +25,8 @@ class UserHandleService @Autowired constructor(
         val platform = Platform.fromDecode(request.platform) ?: return
 
         if (userHandleNotExists(request)) {
-            val userHandle = UserHandle(userHandle = request.userHandle, platform = platform)
             val user = userRepository.findByUsername(request.username).get()
-            userHandle.user = user
+            val userHandle = UserHandle(userHandle = request.userHandle, platform = platform, user = user)
             user.userHandles.add(userHandle)
             userRepository.save(user)
         }

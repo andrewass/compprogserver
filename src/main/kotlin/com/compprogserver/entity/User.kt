@@ -33,11 +33,7 @@ class User(
 
         @JsonIgnore
         @OneToMany(mappedBy = "user")
-        val submissions: MutableList<Submission> = mutableListOf(),
-
-        @JsonIgnore
-        @OneToMany(mappedBy = "user")
-        val solvedProblems: MutableList<Problem> = mutableListOf()
+        val submissions: MutableList<Submission> = mutableListOf()
 
 ) {
     fun addUserHandle(userHandle: UserHandle) {

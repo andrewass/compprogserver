@@ -13,10 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 abstract class CommonConsumer(private val restTemplate: RestTemplate) {
 
-    abstract fun getUserHandle(username: String): UserHandle?
-
-    abstract fun getUserSubmissions(userHandle: UserHandle): Set<Submission>
-
     fun exchange(url: String, vararg parameters: Pair<String, String>) =
             restTemplate.exchange(createURI(url, *parameters),
                     HttpMethod.GET,

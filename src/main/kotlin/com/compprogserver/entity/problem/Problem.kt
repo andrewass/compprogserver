@@ -18,10 +18,9 @@ class Problem(
         val problemTag: ProblemTag? = null,
 
         @Enumerated(EnumType.STRING)
-        val platform: Platform? = null,
+        val platform: Platform,
 
-        @Column(name = "problem_name", nullable = false)
-        val problemName: String = "",
+        val problemName: String,
 
         val problemUrl: String = "",
 

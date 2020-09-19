@@ -1,6 +1,7 @@
 package com.compprogserver.consumer
 
 import com.compprogserver.entity.Contest
+import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.exception.ExternalEndpointException
@@ -19,18 +20,18 @@ class CodeforcesConsumer @Autowired constructor(
     @Value(value = "\${codeforces.url}")
     private lateinit var codeforcesUrl: String
 
-    override fun getUserHandle(username: String): UserHandle? {
+    fun getUserHandle(handleName: String, user: User): UserHandle? {
         val url = "$codeforcesUrl/user.info"
-        val response = exchange(url, Pair("handles", username))
+        val response = exchange(url, Pair("handles", handleName))
 
         return if (response.statusCode.is2xxSuccessful) {
-            convertToUserHandleCF(response.body!!)
+            convertToUserHandleCF(response.body!!, user)
         } else {
-            throw ExternalEndpointException("Userhandle for $username was not found");
+            throw ExternalEndpointException("Userhandle for $handleName was not found")
         }
     }
 
-    override fun getUserSubmissions(userHandle: UserHandle): Set<Submission> {
+    fun getUserSubmissions(userHandle: UserHandle): Set<Submission> {
         val url = "$codeforcesUrl/user.status"
         val response = exchange(url, Pair("handle", userHandle.userHandle),
                 Pair("from", "1"), Pair("count", submissionCount))
@@ -42,7 +43,7 @@ class CodeforcesConsumer @Autowired constructor(
         }
     }
 
-    fun getContests():Set<Contest> {
+    fun getContests(): Set<Contest> {
         val url = "$codeforcesUrl/contest.list"
         val response = exchange(url, Pair("gym", "false"))
 

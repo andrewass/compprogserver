@@ -1,6 +1,7 @@
 package com.compprogserver.consumer
 
 import com.compprogserver.entity.Platform
+import com.compprogserver.entity.User
 import com.compprogserver.exception.ExternalEndpointException
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -30,8 +31,9 @@ internal class UvaConsumerTest {
     @BeforeAll
     private fun setUp() = MockKAnnotations.init(this)
 
-    private val testUser = "testUser"
-    private val userHandleUrl = "$uhuntUrl/uname2uid/$testUser"
+    private val handleName = "testUser"
+    private val user = User(username = handleName)
+    private val userHandleUrl = "$uhuntUrl/uname2uid/$handleName"
     private val externalId = "12345"
 
 
@@ -41,11 +43,11 @@ internal class UvaConsumerTest {
             restTemplate.exchange(userHandleUrl, HttpMethod.GET, any(), String::class.java)
         } returns ResponseEntity(externalId, HttpStatus.OK)
 
-        val userHandle = uvaConsumer.getUserHandle(testUser)
+        val userHandle = uvaConsumer.getUserHandle(handleName = handleName, user = user)
 
         assertEquals(externalId.toLong(), userHandle!!.externalId)
         assertEquals(Platform.UVA, userHandle.platform)
-        assertEquals(testUser, userHandle.userHandle)
+        assertEquals(handleName, userHandle.userHandle)
     }
 
     @Test
@@ -54,6 +56,8 @@ internal class UvaConsumerTest {
             restTemplate.exchange(userHandleUrl, HttpMethod.GET, any(), String::class.java)
         } returns ResponseEntity(HttpStatus.NOT_FOUND)
 
-        assertThrows<ExternalEndpointException> { uvaConsumer.getUserHandle(testUser) }
+        assertThrows<ExternalEndpointException> {
+            uvaConsumer.getUserHandle(handleName = handleName, user = user)
+        }
     }
 }

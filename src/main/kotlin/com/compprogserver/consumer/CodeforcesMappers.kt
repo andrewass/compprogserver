@@ -2,6 +2,7 @@ package com.compprogserver.consumer
 
 import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform.CODEFORCES
+import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.Submission
@@ -11,7 +12,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-fun convertToUserHandleCF(response: String): UserHandle? {
+fun convertToUserHandleCF(response: String, user: User): UserHandle? {
     val jsonBody = JSONObject(response)
     val handles = jsonBody.getJSONArray("result")
     if (handles.isEmpty) {
@@ -25,7 +26,9 @@ fun convertToUserHandleCF(response: String): UserHandle? {
             maxRating = handle.getInt("maxRating"),
             rank = handle.getString("rank"),
             maxRank = handle.getString("maxRank"),
-            platform = CODEFORCES)
+            platform = CODEFORCES,
+            user = user
+    )
 }
 
 fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submission> {
@@ -41,7 +44,8 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
                     userHandle = userHandle,
                     submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
                     problem = convertToProblem(submission.getJSONObject("problem")),
-                    verdict = Verdict.SOLVED
+                    verdict = Verdict.SOLVED,
+                    user = userHandle.user
             ))
         }
     }

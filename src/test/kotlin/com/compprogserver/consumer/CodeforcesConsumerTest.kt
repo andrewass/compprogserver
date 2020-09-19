@@ -2,6 +2,7 @@ package com.compprogserver.consumer
 
 import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform
+import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.exception.ExternalEndpointException
 import com.google.gson.Gson
@@ -38,9 +39,10 @@ internal class CodeforcesConsumerTest {
     private val codeforcesUrl = "http://codeforces.com/api"
 
     private val testUser = "testUser"
+    private val user = User(username = testUser)
     private val userHandleUrl = "$codeforcesUrl/user.info?handles=$testUser"
     private val userHandle = UserHandle(userHandle = testUser, rating = 1000,
-            maxRating = 1500, rank = "150", maxRank = "100")
+            maxRating = 1500, rank = "150", maxRank = "100", user = user, platform = Platform.CODEFORCES)
 
     private val constestUrl = "$codeforcesUrl/contest.list?gym=false"
 
@@ -54,7 +56,7 @@ internal class CodeforcesConsumerTest {
             restTemplate.exchange(userHandleUrl, HttpMethod.GET, any(), String::class.java)
         } returns ResponseEntity(response, HttpStatus.OK)
 
-        val userHandle = codeforcesConsumer.getUserHandle(testUser)
+        val userHandle = codeforcesConsumer.getUserHandle(handleName = testUser, user = user)
 
         assertEquals(testUser, userHandle!!.userHandle)
     }
@@ -65,7 +67,9 @@ internal class CodeforcesConsumerTest {
             restTemplate.exchange(userHandleUrl, HttpMethod.GET, any(), String::class.java)
         } returns ResponseEntity(HttpStatus.NOT_FOUND)
 
-        assertThrows<ExternalEndpointException> { codeforcesConsumer.getUserHandle(testUser) }
+        assertThrows<ExternalEndpointException> {
+            codeforcesConsumer.getUserHandle(handleName = testUser, user = user)
+        }
     }
 
     @Test

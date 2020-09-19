@@ -3,6 +3,8 @@ package com.compprogserver.controller
 import com.compprogserver.common.AbstractIntegrationTest
 import com.compprogserver.controller.request.AddProblemRatingRequest
 import com.compprogserver.controller.request.AddProblemRequest
+import com.compprogserver.entity.Platform
+import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.problem.Problem
@@ -43,8 +45,12 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
 
     @Test
     fun `should get list of popular problems`() {
-        val problems = listOf(Problem(problemName = "problem1"), Problem(problemName = "problem2"),
-                Problem(problemName = "problem3"), Problem(problemName = "problem4"))
+        val problems = listOf(
+                Problem(problemName = "problem1", platform = CODEFORCES),
+                Problem(problemName = "problem2", platform = CODEFORCES),
+                Problem(problemName = "problem3", platform = CODEFORCES),
+                Problem(problemName = "problem4", platform = CODEFORCES)
+        )
         problemRepository.saveAll(problems)
 
         mockMvc.perform(get("/problem/popular-problems")
@@ -116,7 +122,7 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
 
     @Test
     fun `should return status unauthorized when username does not exist`() {
-        val problem = problemRepository.save(Problem(problemName = "testProblem"))
+        val problem = problemRepository.save(Problem(problemName = "testProblem", platform = CODEFORCES))
 
         mockMvc.perform(post("/problem/add-problem-rating")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -142,14 +148,14 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
 
     private fun createUserAndProblem(): Pair<User, Problem> {
         val user = userRepository.save(User(username = username))
-        val problem = problemRepository.save(Problem(problemName = "testProblem"))
+        val problem = problemRepository.save(Problem(problemName = "testProblem", platform = CODEFORCES))
 
         return Pair(user, problem)
     }
 
     private fun createPreviousProblemRating(): ProblemRating {
         val user = userRepository.save(User(username = username))
-        val problem = problemRepository.save(Problem(problemName = "testProblem"))
+        val problem = problemRepository.save(Problem(problemName = "testProblem", platform = CODEFORCES))
         val problemRating = ProblemRating(problem = problem, user = user, rating = 4)
 
         return problemRatingRepository.save(problemRating)

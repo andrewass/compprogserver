@@ -14,8 +14,7 @@ class UserHandle(
 
         val externalId: Long? = null,
 
-        @Column(name = "USER_HANDLE", nullable = false)
-        val userHandle: String = "",
+        val userHandle: String,
 
         var rating: Int? = null,
 
@@ -23,7 +22,7 @@ class UserHandle(
 
         @Column(name = "PLATFORM", nullable = false)
         @Enumerated(EnumType.STRING)
-        val platform: Platform? = null,
+        val platform: Platform,
 
         @Column(name = "USER_RANK")
         var rank: String? = null,
@@ -33,7 +32,7 @@ class UserHandle(
 
         @ManyToOne
         @JoinColumn(name = "USER_ID", nullable = false)
-        var user: User? = null
+        val user: User
 ) : Serializable {
 
     fun copyTo(destination: UserHandle) {
