@@ -31,12 +31,6 @@ class SubmissionService @Autowired constructor(
         return submissionRepository.findAllByUserHandle(userHandle.get())
     }
 
-    fun getAllSubmissionsFromUser(username: String): List<Submission> {
-        val user = userRepository.findByUsername(username)
-
-        return submissionRepository.findAllByUser(user.get())
-    }
-
     fun mergeSubmissionsFromPlatformAndUserHandle(userHandleName: String, platformName: String) {
         val platform = Platform.fromDecode(platformName)
                 ?: throw EntityNotFoundException("Platform : $platformName")

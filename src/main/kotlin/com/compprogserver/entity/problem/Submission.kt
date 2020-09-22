@@ -20,13 +20,9 @@ class Submission(
         @JoinColumn(name = "PROBLEM_ID")
         var problem: Problem? = null,
 
-        @ManyToOne(optional = false)
+        @ManyToOne
         @JoinColumn(name = "HANDLE_ID")
         val userHandle: UserHandle,
-
-        @ManyToOne(optional = false)
-        @JoinColumn(name = "USER_ID")
-        val user: User,
 
         @Enumerated(EnumType.STRING)
         val verdict: Verdict,

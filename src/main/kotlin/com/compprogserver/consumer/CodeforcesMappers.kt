@@ -44,8 +44,7 @@ fun convertToSubmissions(response: String, userHandle: UserHandle): Set<Submissi
                     userHandle = userHandle,
                     submitted = toLocateDateTime(submission.getLong("creationTimeSeconds")),
                     problem = convertToProblem(submission.getJSONObject("problem")),
-                    verdict = Verdict.SOLVED,
-                    user = userHandle.user
+                    verdict = Verdict.SOLVED
             ))
         }
     }

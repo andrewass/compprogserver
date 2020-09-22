@@ -35,11 +35,11 @@ class UserHandle(
         val user: User
 ) : Serializable {
 
-    fun copyTo(destination: UserHandle) {
-        destination.rating = rating
-        destination.maxRating = maxRating
-        destination.rank = rank
-        destination.maxRank = maxRank
+    fun updateHandle(updated: UserHandle) {
+        rating = updated.rating
+        maxRating = updated.maxRating
+        rank = updated.rank
+        maxRank = updated.maxRank
     }
 }
 

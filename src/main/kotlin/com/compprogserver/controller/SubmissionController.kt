@@ -1,7 +1,6 @@
 package com.compprogserver.controller
 
 import com.compprogserver.controller.request.GetAllSubmissionFromHandleRequest
-import com.compprogserver.controller.request.GetAllSubmissionFromUserRequest
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.service.SubmissionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,14 +23,6 @@ class SubmissionController @Autowired constructor(
         return ResponseEntity(submissions, HttpStatus.OK)
     }
 
-    @GetMapping("/get-user-submissions")
-    fun getAllUserSubmissions(@RequestBody request: GetAllSubmissionFromUserRequest):
-            ResponseEntity<List<Submission>> {
-        val submissions = submissionService.getAllSubmissionsFromUser(request.username)
-
-        return ResponseEntity(submissions, HttpStatus.OK)
-    }
-
     @GetMapping("/get-remote-submissions")
     fun getRemoteSubmissionsFromPlatform(@RequestBody request: GetAllSubmissionFromHandleRequest):
             HttpStatus {
@@ -42,5 +33,4 @@ class SubmissionController @Autowired constructor(
             HttpStatus.UNAUTHORIZED
         }
     }
-
 }

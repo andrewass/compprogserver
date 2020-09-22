@@ -12,8 +12,6 @@ interface SubmissionRepository : JpaRepository<Submission, Long> {
 
     fun findAllByUserHandle(userHandle: UserHandle): List<Submission>
 
-    fun findAllByUser(user: User) : List<Submission>
-
     @Query("select p.id from Submission s inner join s.problem p where s.userHandle = ?1")
     fun findAllProblemIdFromSubmissionsByUserHandleBy(userHandle: UserHandle) : Set<Long>
 }

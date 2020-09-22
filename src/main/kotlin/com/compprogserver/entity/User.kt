@@ -1,7 +1,5 @@
 package com.compprogserver.entity
 
-import com.compprogserver.entity.problem.Problem
-import com.compprogserver.entity.problem.Submission
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
@@ -29,12 +27,7 @@ class User(
 
         @JsonIgnore
         @OneToMany(mappedBy = "user")
-        val problemRatings: MutableList<ProblemRating> = mutableListOf(),
-
-        @JsonIgnore
-        @OneToMany(mappedBy = "user")
-        val submissions: MutableList<Submission> = mutableListOf()
-
+        val problemRatings: MutableList<ProblemRating> = mutableListOf()
 ) {
     fun addUserHandle(userHandle: UserHandle) {
         userHandles.add(userHandle)

@@ -1,6 +1,7 @@
 package com.compprogserver.controller
 
 import com.compprogserver.controller.request.AddUserHandleRequest
+import com.compprogserver.controller.request.FetchRemoteUserHandlesRequest
 import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.service.UserHandleService
@@ -16,7 +17,8 @@ class UserHandleController @Autowired constructor(
         private val userHandleService: UserHandleService
 ) {
 
-    @PostMapping("/get-userhandles")
+
+    @PostMapping("/get-users-userhandles")
     fun getUserHandlesFromUser(@RequestBody request: GetUserHandlesRequest): ResponseEntity<List<UserHandle>> {
         val userHandles = userHandleService.getUserHandlesFromUsername(request.username)
 
