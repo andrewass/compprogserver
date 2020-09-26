@@ -18,19 +18,22 @@ class SubmissionController @Autowired constructor(
     @GetMapping("/get-handle-submissions")
     fun getAllHandleSubmissions(@RequestBody request: GetAllSubmissionFromHandleRequest):
             ResponseEntity<List<Submission>> {
-        val submissions = submissionService.getAllSubmissionsFromHandle(request.userHandle, request.platform)
-
-        return ResponseEntity(submissions, HttpStatus.OK)
+        return try {
+            val submissions = submissionService.getAllSubmissionsFromHandle(request.userHandle, request.platform)
+            ResponseEntity(submissions, HttpStatus.OK)
+        } catch (e: Exception) {
+            ResponseEntity(HttpStatus.UNAUTHORIZED)
+        }
     }
 
-    @GetMapping("/get-remote-submissions")
-    fun getRemoteSubmissionsFromPlatform(@RequestBody request: GetAllSubmissionFromHandleRequest):
-            HttpStatus {
+    @GetMapping("/fetch-remote-submissions")
+    fun fetchRemoteSubmissionsFromPlatform(@RequestBody request: GetAllSubmissionFromHandleRequest):
+            ResponseEntity<Collection<Submission>> {
         return try {
-            submissionService.mergeSubmissionsFromPlatformAndUserHandle(request.userHandle, request.platform)
-            HttpStatus.OK
+            val submissions = submissionService.fetchRemoteSubmissionsFromPlatform(request.userHandle, request.platform)
+            ResponseEntity(submissions, HttpStatus.OK)
         } catch (e: Exception) {
-            HttpStatus.UNAUTHORIZED
+            ResponseEntity(HttpStatus.UNAUTHORIZED)
         }
     }
 }

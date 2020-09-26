@@ -7,7 +7,6 @@ import com.compprogserver.entity.problem.Submission
 import com.compprogserver.repository.ProblemRepository
 import com.compprogserver.repository.SubmissionRepository
 import com.compprogserver.repository.UserHandleRepository
-import com.compprogserver.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityNotFoundException
@@ -19,21 +18,11 @@ class SubmissionService @Autowired constructor(
         private val submissionRepository: SubmissionRepository,
         private val problemRepository: ProblemRepository,
         private val codeforcesConsumer: CodeforcesConsumer,
-        private val userHandleRepository: UserHandleRepository,
-        private val userRepository: UserRepository
+        private val userHandleRepository: UserHandleRepository
 ) {
 
-    fun getAllSubmissionsFromHandle(userHandleName: String, platformName: String): List<Submission> {
-        val platform = Platform.fromDecode(platformName)
-                ?: throw EntityNotFoundException("Platform : $platformName")
-        val userHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userHandleName, platform)
-
-        return submissionRepository.findAllByUserHandle(userHandle.get())
-    }
-
-    fun mergeSubmissionsFromPlatformAndUserHandle(userHandleName: String, platformName: String) {
-        val platform = Platform.fromDecode(platformName)
-                ?: throw EntityNotFoundException("Platform : $platformName")
+    fun fetchRemoteSubmissionsFromPlatform(userHandleName: String, platformName: String) : Collection<Submission> {
+        val platform = Platform.fromDecode(platformName) ?: throw EntityNotFoundException("Platform : $platformName")
         val userHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userHandleName, platform)
         val allSubmissions = submissionRepository.findAllByUserHandle(userHandle.get()).toMutableSet()
 
@@ -42,6 +31,15 @@ class SubmissionService @Autowired constructor(
             allSubmissions.addAll(fetchedSubmissions)
             attachSubmissionsToProblems(allSubmissions)
         }
+
+        return allSubmissions
+    }
+
+    fun getAllSubmissionsFromHandle(userHandleName: String, platformName: String): List<Submission> {
+        val platform = Platform.fromDecode(platformName) ?: throw EntityNotFoundException("Platform : $platformName")
+        val userHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(userHandleName, platform)
+
+        return submissionRepository.findAllByUserHandle(userHandle.get())
     }
 
     fun getAllProblemIdForSubmissionsByUserHandle(userHandle: UserHandle) =
@@ -50,8 +48,8 @@ class SubmissionService @Autowired constructor(
     private fun attachSubmissionsToProblems(submissions: Set<Submission>) {
         for (submission in submissions) {
             if (submission.id == null) {
-                val problem = problemRepository.findByProblemName(submission.problem!!.problemName)
-                        ?: problemRepository.save(submission.problem!!)
+                val problem = problemRepository.findByProblemName(submission.problem.problemName)
+                        ?: problemRepository.save(submission.problem)
                 submission.problem = problem
                 problem.submissions.add(submission)
                 problemRepository.save(problem)

@@ -10,10 +10,10 @@ create table t_user(
 create table t_user_handle(
     handle_id           bigint(20)  not null auto_increment,
     user_id             bigint(20) not null,
-    external_id         int(11),
+    external_id         int,
     user_handle         varchar(50)  not null,
-    rating              int(11),
-    max_rating          int(11),
+    rating              int,
+    max_rating          int,
     user_rank           varchar(30),
     max_user_rank       varchar(30),
     platform            varchar(50)  not null,
@@ -27,8 +27,8 @@ create table t_problem(
 	platform            varchar(50),
 	problem_tag         varchar(50),
 	problem_url         varchar(100),
-	rating              int(11),
-	rate_count          int(11),
+	rating              int,
+	rate_count          int,
 	rate_sum            bigint(20),
 	primary key (problem_id)
 );
@@ -37,7 +37,7 @@ create table t_problem_rating(
 	problem_rating_id   bigint(20) not null auto_increment,
 	problem_id          bigint(20) not null,
 	user_id             bigint(20) not null,
-	rating              int(11) not null,
+	rating              int not null,
 	primary key (problem_rating_id),
 	foreign key (problem_id)    references t_problem(problem_id),
 	foreign key (user_id)       references t_user(user_id)
@@ -45,7 +45,7 @@ create table t_problem_rating(
 
 create table t_submission(
     submission_id       bigint(20)  not null auto_increment,
-    remote_id           int(11),
+    remote_id           int,
     problem_id          bigint(20),
     handle_id           bigint(20)  not null,
     verdict             varchar(50),
@@ -57,10 +57,10 @@ create table t_submission(
 
 create table t_contest(
 	contest_id          bigint(20)  not null auto_increment,
-	remote_id           int(11),
+	remote_id           int,
 	contest_name        varchar(300),
 	start_time          datetime,
-	duration            int(11),
+	duration            int,
 	platform            varchar(50),
 	primary key (contest_id)
 );

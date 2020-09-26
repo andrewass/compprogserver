@@ -22,7 +22,7 @@ class Problem(
 
         val problemName: String,
 
-        val problemUrl: String = "",
+        val problemUrl: String? = null,
 
         var rating : Int = 3,
 

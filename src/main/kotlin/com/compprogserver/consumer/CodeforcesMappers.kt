@@ -70,7 +70,7 @@ fun convertToContests(response: String): Set<Contest> {
 }
 
 
-fun convertToProblem(problem: JSONObject): Problem {
+private fun convertToProblem(problem: JSONObject): Problem {
     return Problem(
             platform = CODEFORCES,
             problemName = problem.getString("name"),

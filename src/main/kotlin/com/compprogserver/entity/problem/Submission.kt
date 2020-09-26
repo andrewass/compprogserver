@@ -1,6 +1,5 @@
 package com.compprogserver.entity.problem
 
-import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -18,7 +17,7 @@ class Submission(
 
         @ManyToOne
         @JoinColumn(name = "PROBLEM_ID")
-        var problem: Problem? = null,
+        var problem: Problem,
 
         @ManyToOne
         @JoinColumn(name = "HANDLE_ID")
@@ -30,11 +29,11 @@ class Submission(
         val submitted: LocalDateTime
 ) {
 
-    override fun hashCode() = remoteId.hashCode()
+    override fun hashCode() = userHandle.hashCode() + submitted.hashCode()
 
     override fun equals(other: Any?): Boolean {
         return if (other is Submission) {
-            other.remoteId == remoteId
+            other.userHandle == userHandle && other.submitted == submitted
         } else {
             false
         }

@@ -2,7 +2,6 @@ package com.compprogserver.service
 
 import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.controller.request.AddUserHandleRequest
-import com.compprogserver.controller.request.FetchRemoteUserHandlesRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.repository.UserHandleRepository
@@ -35,7 +34,7 @@ class UserHandleService @Autowired constructor(
         }
     }
 
-    private fun addManualUserHandle(request: AddUserHandleRequest, platform: Platform){
+    private fun addManualUserHandle(request: AddUserHandleRequest, platform: Platform) {
         if (userHandleNotExists(request.userHandle, platform)) {
             val user = userRepository.findByUsername(request.username).get()
             val userHandle = UserHandle(userHandle = request.userHandle, platform = platform, user = user)
@@ -50,7 +49,7 @@ class UserHandleService @Autowired constructor(
         val persistedUserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(
                 userHandle = remoteUserHandle.userHandle, platform = remoteUserHandle.platform
         )
-        if(persistedUserHandle.isEmpty){
+        if (persistedUserHandle.isEmpty) {
             user.userHandles.add(remoteUserHandle)
             userRepository.save(user)
         } else {
@@ -59,7 +58,7 @@ class UserHandleService @Autowired constructor(
         }
     }
 
-    private fun userHandleNotExists(userHandle : String, platform: Platform): Boolean {
+    private fun userHandleNotExists(userHandle: String, platform: Platform): Boolean {
         return !userHandleRepository.existsByUserHandleAndPlatform(userHandle, platform)
     }
 }

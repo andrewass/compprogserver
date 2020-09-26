@@ -1,7 +1,6 @@
 package com.compprogserver.controller
 
 import com.compprogserver.controller.request.AddUserHandleRequest
-import com.compprogserver.controller.request.FetchRemoteUserHandlesRequest
 import com.compprogserver.controller.request.GetUserHandlesRequest
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.service.UserHandleService

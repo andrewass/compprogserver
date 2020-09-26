@@ -30,7 +30,11 @@ abstract class AbstractIntegrationTest {
     protected lateinit var userHandleRepository: UserHandleRepository
 
     @Autowired
+    protected lateinit var submissionRepository: SubmissionRepository
+
+    @Autowired
     protected lateinit var objectMapper: ObjectMapper
+
 
     companion object {
         @Container
@@ -40,10 +44,10 @@ abstract class AbstractIntegrationTest {
     }
 
     fun clearRepositories(){
-        problemRatingRepository.deleteAll()
-        userRepository.deleteAll()
         contestRepository.deleteAll()
-        problemRepository.deleteAll()
+        problemRatingRepository.deleteAll()
         userHandleRepository.deleteAll()
+        userRepository.deleteAll()
+        problemRepository.deleteAll()
     }
 }
