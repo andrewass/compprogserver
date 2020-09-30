@@ -7,10 +7,9 @@ import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.ProblemWrapper
+import com.compprogserver.entity.problem.Verdict
 import com.compprogserver.exception.EntityNotFoundException
-import com.compprogserver.repository.ProblemRatingRepository
-import com.compprogserver.repository.ProblemRepository
-import com.compprogserver.repository.UserRepository
+import com.compprogserver.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -22,10 +21,12 @@ class ProblemService @Autowired constructor(
         private val userHandleService: UserHandleService,
         private val submissionService: SubmissionService,
         private val userRepository: UserRepository,
-        private val problemRatingRepository: ProblemRatingRepository
+        private val problemRatingRepository: ProblemRatingRepository,
+        private val userHandleRepository: UserHandleRepository,
+        private val submissionRepository: SubmissionRepository
 ) {
 
-    fun getPopularProblems(username : String?, page: Int, size: Int): Page<ProblemWrapper> {
+    fun getPopularProblems(username: String?, page: Int, size: Int): Page<ProblemWrapper> {
         val pageable = PageRequest.of(page, size)
         val problems = problemRepository.findAllByOrderByRatingDesc(pageable)
 
@@ -65,13 +66,19 @@ class ProblemService @Autowired constructor(
     }
 
     private fun wrapProblems(problems: Page<Problem>, username: String?): Page<ProblemWrapper> {
-        return problems.map { ProblemWrapper(problem = it, solved = isSolvedByUser(it, username)) }
-
+        return if (username != null) {
+            val user = userRepository.findByUsername(username).get()
+            problems.map { ProblemWrapper(problem = it, solved = solvedByUser(it, user)) }
+        } else {
+            problems.map { ProblemWrapper(problem = it) }
+        }
     }
 
-    private fun isSolvedByUser(problem: Problem, username: String?): Boolean {
-        return if(username != null){
-            true
+    private fun solvedByUser(problem: Problem, user: User): Boolean {
+        val userHandle = userHandleRepository.findByUserAndPlatform(user, problem.platform)
+
+        return if (userHandle.isPresent) {
+            submissionRepository.existsByUserHandleAndProblemAndVerdict(userHandle.get(), problem, Verdict.SOLVED)
         } else {
             false
         }

@@ -12,5 +12,4 @@ interface ContestRepository : JpaRepository<Contest, Long> {
     fun findContestByPlatform(platform: Platform): HashSet<Contest>
 
     fun findContestByStartTimeAfter(startTime: LocalDateTime): List<Contest>
-
 }

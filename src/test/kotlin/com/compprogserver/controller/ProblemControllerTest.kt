@@ -3,11 +3,13 @@ package com.compprogserver.controller
 import com.compprogserver.common.AbstractIntegrationTest
 import com.compprogserver.controller.request.AddProblemRatingRequest
 import com.compprogserver.controller.request.AddProblemRequest
-import com.compprogserver.entity.Platform
-import com.compprogserver.entity.Platform.CODEFORCES
+import com.compprogserver.entity.Platform.*
 import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
+import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
+import com.compprogserver.entity.problem.Submission
+import com.compprogserver.entity.problem.Verdict
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import java.time.LocalDateTime.now
 
 @WithMockUser
 @AutoConfigureMockMvc
@@ -39,8 +42,49 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `should get list of solved problems id and status ok`(){
-        //TODO:Complete test implementation
+    fun `should get list of solved problems with solved flag set`(){
+        val problems = listOf(
+                Problem(problemName = "problem1", platform = CODEFORCES),
+                Problem(problemName = "problem2", platform = CODECHEF),
+                Problem(problemName = "problem3", platform = CODEFORCES),
+                Problem(problemName = "problem4", platform = KATTIS)
+        )
+        problemRepository.saveAll(problems)
+
+        val user = User(username = "testUser")
+        userRepository.save(user)
+
+        val userHandles = listOf(
+                UserHandle(userHandle = "testHandleCF", user = user, platform = CODEFORCES),
+                UserHandle(userHandle = "testHandleKattis", user = user, platform = KATTIS)
+        )
+        userHandleRepository.saveAll(userHandles)
+
+        val submissions = listOf(
+                Submission(problem = problems[0], submitted = now().minusDays(2),
+                        userHandle = userHandles[0], verdict = Verdict.SOLVED),
+                Submission(problem = problems[2], submitted = now().minusDays(1),
+                        userHandle = userHandles[0], verdict = Verdict.SOLVED),
+                Submission(problem = problems[3], submitted = now().minusDays(1),
+                        userHandle = userHandles[1], verdict = Verdict.SOLVED)
+        )
+        submissionRepository.saveAll(submissions)
+
+        mockMvc.perform(get("/problem/popular-problems")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "testUser"))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("totalPages").value(1))
+                .andExpect(jsonPath("totalElements").value(4))
+                .andExpect(jsonPath("problems", hasSize<Any>(4)))
+                .andExpect(jsonPath("$.problems[0].problem.problemName").value("problem1"))
+                .andExpect(jsonPath("$.problems[0].solved").value("true"))
+                .andExpect(jsonPath("$.problems[1].problem.problemName").value("problem2"))
+                .andExpect(jsonPath("$.problems[1].solved").value("false"))
+                .andExpect(jsonPath("$.problems[2].problem.problemName").value("problem3"))
+                .andExpect(jsonPath("$.problems[2].solved").value("true"))
+                .andExpect(jsonPath("$.problems[3].problem.problemName").value("problem4"))
+                .andExpect(jsonPath("$.problems[3].solved").value("true"))
     }
 
     @Test
