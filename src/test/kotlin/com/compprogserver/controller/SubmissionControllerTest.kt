@@ -2,7 +2,7 @@ package com.compprogserver.controller
 
 import com.compprogserver.common.AbstractIntegrationTest
 import com.compprogserver.consumer.CodeforcesConsumer
-import com.compprogserver.controller.request.GetAllSubmissionFromHandleRequest
+import com.compprogserver.controller.request.GetSubmissionsFromHandleRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
@@ -34,6 +34,7 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
     private lateinit var codeforcesConsumerMock: CodeforcesConsumer
 
     private val userHandleName = "testHandle"
+    private val username = "testUser"
 
     @BeforeEach
     fun setup() {
@@ -42,7 +43,7 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
 
     @Test
     fun `should get all submissions from userhandle and status ok`() {
-        val user = User(username = "testUser")
+        val user = User(username = username)
         val problem1 = Problem(problemName = "KattisProblem1", platform = Platform.KATTIS)
         val problem2 = Problem(problemName = "KattisProblem2", platform = Platform.KATTIS)
         val userHandle = UserHandle(userHandle = userHandleName, platform = Platform.KATTIS, user = user)
@@ -60,7 +61,7 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
         problemRepository.save(problem1)
         problemRepository.save(problem2)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/submission/get-handle-submissions")
+        mockMvc.perform(MockMvcRequestBuilders.post("/submission/get-handle-submissions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createGetSubmissionsFromHandleRequest("Kattis")))
                 .andExpect(MockMvcResultMatchers.status().isOk)
@@ -73,7 +74,7 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
 
     @Test
     fun `should fetch remote submissions from codeforces with status ok`() {
-        val user = User(username = "testUser")
+        val user = User(username = username)
         val userHandle = UserHandle(userHandle = userHandleName, platform = Platform.CODEFORCES, user = user)
 
         userRepository.save(user)
@@ -88,7 +89,7 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
                         userHandle = userHandle, verdict = Verdict.SOLVED, submitted = now())
         )
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/submission/fetch-remote-submissions")
+        mockMvc.perform(MockMvcRequestBuilders.post("/submission/fetch-remote-submissions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createGetSubmissionsFromHandleRequest("Codeforces")))
                 .andExpect(MockMvcResultMatchers.status().isOk)
@@ -100,33 +101,32 @@ internal class SubmissionControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `should return status unauthorized when userhandle is not found when fetcing persisted submissions`(){
-        val user = User(username = "testUser")
+    fun `should return status unauthorized when userhandle is not found when fetcing persisted submissions`() {
+        val user = User(username = username)
 
         userRepository.save(user)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/submission/get-handle-submissions")
+        mockMvc.perform(MockMvcRequestBuilders.post("/submission/get-handle-submissions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createGetSubmissionsFromHandleRequest("Kattis")))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     @Test
-    fun `should return status unauthorized when userhandle is not found when fetcing remote submissions`(){
-        val user = User(username = "testUser")
+    fun `should return status unauthorized when userhandle is not found when fetcing remote submissions`() {
+        val user = User(username = username)
 
         userRepository.save(user)
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/submission/fetch-remote-submissions")
+        mockMvc.perform(MockMvcRequestBuilders.post("/submission/fetch-remote-submissions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createGetSubmissionsFromHandleRequest("Codeforces")))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized)
     }
 
     private fun createGetSubmissionsFromHandleRequest(platform: String): String {
-        val request = GetAllSubmissionFromHandleRequest(userHandle = userHandleName, platform = platform)
+        val request = GetSubmissionsFromHandleRequest(userHandleName, platform, username)
 
         return objectMapper.writeValueAsString(request)
     }
-
 }

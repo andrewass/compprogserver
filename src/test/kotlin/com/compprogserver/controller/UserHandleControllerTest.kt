@@ -57,7 +57,7 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
                 .andExpect(status().isOk)
 
         val savedUserHandle = userHandleRepository
-                .findUserHandleByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.KATTIS).get()
+                .findByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.KATTIS).get()
 
         assertEquals(userHandle, savedUserHandle.userHandle)
         assertEquals(Platform.KATTIS, savedUserHandle.platform)
@@ -75,7 +75,7 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
                 .andExpect(status().isOk)
 
         val updatedHandle = userHandleRepository
-                .findUserHandleByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.KATTIS).get()
+                .findByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.KATTIS).get()
 
         assertEquals(previousHandle.id, updatedHandle.id)
         assertEquals(previousHandle.userHandle, updatedHandle.userHandle)
@@ -96,7 +96,7 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
                 .andExpect(status().isOk)
 
         val savedUserHandle = userHandleRepository
-                .findUserHandleByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.CODEFORCES).get()
+                .findByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.CODEFORCES).get()
 
         assertEquals(userHandle, savedUserHandle.userHandle)
         assertEquals(Platform.CODEFORCES, savedUserHandle.platform)
@@ -120,7 +120,7 @@ internal class UserHandleControllerTest : AbstractIntegrationTest() {
                 .andExpect(status().isOk)
 
         val updatedHandle = userHandleRepository
-                .findUserHandleByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.CODEFORCES).get()
+                .findByUserHandleAndPlatform(userHandle = userHandle, platform = Platform.CODEFORCES).get()
 
         assertEquals(previousHandle.id, updatedHandle.id)
         assertEquals(previousHandle.userHandle, updatedHandle.userHandle)

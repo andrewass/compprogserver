@@ -46,8 +46,8 @@ class UserHandleService @Autowired constructor(
     private fun fetchAndStoreCodeforcesHandle(request: AddUserHandleRequest) {
         val user = userRepository.findByUsername(request.username).get()
         val remoteUserHandle = codeforcesConsumer.getUserHandle(handleName = request.userHandle, user = user) ?: return
-        val persistedUserHandle = userHandleRepository.findUserHandleByUserHandleAndPlatform(
-                userHandle = remoteUserHandle.userHandle, platform = remoteUserHandle.platform
+        val persistedUserHandle = userHandleRepository.findByUserHandleAndPlatformAndUser(
+                userHandle = remoteUserHandle.userHandle, platform = remoteUserHandle.platform, user = user
         )
         if (persistedUserHandle.isEmpty) {
             user.userHandles.add(remoteUserHandle)

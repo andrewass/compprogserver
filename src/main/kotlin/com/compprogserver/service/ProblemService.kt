@@ -75,12 +75,10 @@ class ProblemService @Autowired constructor(
     }
 
     private fun solvedByUser(problem: Problem, user: User): Boolean {
-        val userHandle = userHandleRepository.findByUserAndPlatform(user, problem.platform)
+        val userHandles = userHandleRepository.findByUserAndPlatform(user, problem.platform)
 
-        return if (userHandle.isPresent) {
-            submissionRepository.existsByUserHandleAndProblemAndVerdict(userHandle.get(), problem, Verdict.SOLVED)
-        } else {
-            false
+        return userHandles.any {
+            submissionRepository.existsByUserHandleAndProblemAndVerdict(it, problem, Verdict.SOLVED)
         }
     }
 

@@ -1,6 +1,6 @@
 package com.compprogserver.controller
 
-import com.compprogserver.controller.request.GetAllSubmissionFromHandleRequest
+import com.compprogserver.controller.request.GetSubmissionsFromHandleRequest
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.service.SubmissionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,8 +15,8 @@ class SubmissionController @Autowired constructor(
         val submissionService: SubmissionService
 ) {
 
-    @GetMapping("/get-handle-submissions")
-    fun getAllHandleSubmissions(@RequestBody request: GetAllSubmissionFromHandleRequest):
+    @PostMapping("/get-handle-submissions")
+    fun getAllHandleSubmissions(@RequestBody request: GetSubmissionsFromHandleRequest):
             ResponseEntity<List<Submission>> {
         return try {
             val submissions = submissionService.getAllSubmissionsFromHandle(request.userHandle, request.platform)
@@ -26,11 +26,12 @@ class SubmissionController @Autowired constructor(
         }
     }
 
-    @GetMapping("/fetch-remote-submissions")
-    fun fetchRemoteSubmissionsFromPlatform(@RequestBody request: GetAllSubmissionFromHandleRequest):
+    @PostMapping("/fetch-remote-submissions")
+    fun fetchRemoteSubmissionsFromPlatform(@RequestBody request: GetSubmissionsFromHandleRequest):
             ResponseEntity<Collection<Submission>> {
         return try {
-            val submissions = submissionService.fetchRemoteSubmissionsFromPlatform(request.userHandle, request.platform)
+            val submissions = submissionService.fetchRemoteSubmissionsFromPlatform(username = request.username,
+                    userHandleName = request.userHandle, platformName = request.platform)
             ResponseEntity(submissions, HttpStatus.OK)
         } catch (e: Exception) {
             ResponseEntity(HttpStatus.UNAUTHORIZED)

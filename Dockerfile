@@ -8,7 +8,7 @@ ARG JAR_FILE=target/compprogserver-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 #Telling Docker which port our application is using. Port will be published to host
-EXPOSE 8080
+EXPOSE 8080 5005
 
 #Specifies the executable to start when the container is booting
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","-jar","/app.jar"]

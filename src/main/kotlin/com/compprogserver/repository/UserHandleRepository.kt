@@ -11,9 +11,11 @@ import java.util.*
 @Repository
 interface UserHandleRepository : JpaRepository<UserHandle, Long> {
 
-    fun findUserHandleByUserHandleAndPlatform(userHandle: String, platform: Platform): Optional<UserHandle>
+    fun findByUserHandleAndPlatform(userHandle: String, platform: Platform): Optional<UserHandle>
 
-    fun findByUserAndPlatform(user: User, platform: Platform) : Optional<UserHandle>
+    fun findByUserHandleAndPlatformAndUser(userHandle: String, platform: Platform, user: User) : Optional<UserHandle>
+
+    fun findByUserAndPlatform(user: User, platform: Platform) : List<UserHandle>
 
     fun existsByUserHandleAndPlatform(username: String, platform: Platform): Boolean
 
