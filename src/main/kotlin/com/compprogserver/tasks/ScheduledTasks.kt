@@ -15,13 +15,13 @@ class ScheduledTasks @Autowired constructor(
 ) {
     private val log = LoggerFactory.getLogger(ScheduledTasks::class.java)
 
-    @Scheduled(fixedRate = 100000)
+    //@Scheduled(fixedRate = 2000000)
     fun getContests() {
         log.info("Fetching contests")
         contestService.getContestsFromPlatform(Platform.CODEFORCES)
     }
 
-    @Scheduled(fixedRate = 100000)
+    //@Scheduled(fixedRate = 1000000)
     fun updatePersistedProblemsFromUserHandles() {
         log.info("Updating problems from user handles")
     }

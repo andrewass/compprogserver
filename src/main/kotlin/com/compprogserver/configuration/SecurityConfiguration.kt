@@ -32,7 +32,7 @@ class SecurityConfiguration @Autowired constructor(
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/*", "/codeforces/*", "/problem/*", "/contest/*", "/common/*")
+                .antMatchers("/auth/*", "/codeforces/*", "/problem/*", "/contest/*", "/common/*", "/graphql")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

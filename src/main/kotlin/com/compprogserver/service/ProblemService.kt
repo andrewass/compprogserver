@@ -44,10 +44,10 @@ class ProblemService @Autowired constructor(
         }
     }
 
-    fun getAllSolvedProblemsForUser(username: String): List<Long> {
-        val userhandles = userHandleService.getUserHandlesFromUsername(username)
+    fun getAllSolvedProblemsForUser(username: String): List<Problem> {
+        val userHandles = userHandleService.getUserHandlesFromUsername(username)
 
-        return userhandles.flatMap { submissionService.getAllProblemIdForSubmissionsByUserHandle(it) }
+        return userHandles.flatMap { submissionService.findAllProblemsByUserHandleSubmissions(it) }
     }
 
     fun addProblemRating(request: AddProblemRatingRequest) {

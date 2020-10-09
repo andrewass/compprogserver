@@ -3,6 +3,7 @@ package com.compprogserver.controller
 import com.compprogserver.controller.request.AddProblemRatingRequest
 import com.compprogserver.controller.request.AddProblemRequest
 import com.compprogserver.controller.response.GetProblemsResponse
+import com.compprogserver.entity.problem.Problem
 import com.compprogserver.exception.EntityNotFoundException
 import com.compprogserver.service.ProblemService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,8 +19,8 @@ class ProblemController @Autowired constructor(
         private val problemService: ProblemService
 ) {
 
-    @GetMapping("/solved-problems")
-    fun getSolvedProblemsByIdForUser(@RequestParam username: String): ResponseEntity<List<Long>> {
+    @GetMapping("/users-solved-problems")
+    fun getSolvedProblemsByUser(@RequestParam username: String): ResponseEntity<List<Problem>> {
         val problems = problemService.getAllSolvedProblemsForUser(username)
 
         return ResponseEntity.ok(problems)

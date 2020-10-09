@@ -47,7 +47,7 @@ class SubmissionService @Autowired constructor(
         return submissionRepository.findAllByUserHandle(userHandle.get())
     }
 
-    fun getAllProblemIdForSubmissionsByUserHandle(userHandle: UserHandle) =
+    fun findAllProblemsByUserHandleSubmissions(userHandle: UserHandle) =
             submissionRepository.findAllProblemIdFromSubmissionsByUserHandleBy(userHandle)
 
     private fun attachSubmissionsToProblems(submissions: Set<Submission>) {

@@ -37,4 +37,6 @@ class CustomUserService @Autowired constructor(
     fun getPersistedUser(request: AuthenticationRequest): com.compprogserver.entity.User {
         return userRepository.findByUsername(request.username).get()
     }
+
+    fun getAllUsers() = userRepository.findAll()
 }

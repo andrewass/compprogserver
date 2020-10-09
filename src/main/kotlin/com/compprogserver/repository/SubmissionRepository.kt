@@ -13,8 +13,8 @@ interface SubmissionRepository : JpaRepository<Submission, Long> {
 
     fun findAllByUserHandle(userHandle: UserHandle): List<Submission>
 
-    @Query("select p.id from Submission s inner join s.problem p where s.userHandle = ?1")
-    fun findAllProblemIdFromSubmissionsByUserHandleBy(userHandle: UserHandle): Set<Long>
+    @Query("select p from Submission s inner join s.problem p where s.userHandle = ?1")
+    fun findAllProblemIdFromSubmissionsByUserHandleBy(userHandle: UserHandle): Set<Problem>
 
     fun existsByUserHandleAndProblemAndVerdict(userHandle: UserHandle, problem: Problem, verdict: Verdict): Boolean
 }
