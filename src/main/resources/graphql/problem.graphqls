@@ -1,0 +1,11 @@
+
+type Problem{
+    id: ID!
+    problemName: String!
+    platform: String
+    rating: Int
+}
+
+extend type Query {
+    popularProblems(username: String, page: Int, size: Int): [ProblemWrapper]
+}

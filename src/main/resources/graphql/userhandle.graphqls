@@ -1,0 +1,13 @@
+type UserHandle{
+    id: ID!
+    userHandle: String!
+    platform : String
+}
+
+extend type Query {
+    allUserHandlesByUser(username: String) : [UserHandle]
+}
+
+extend type Mutation {
+    addUserHandle(userHandle: String, platformName: String, username: String) : UserHandle
+}

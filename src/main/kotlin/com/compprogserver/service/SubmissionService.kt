@@ -8,6 +8,7 @@ import com.compprogserver.repository.ProblemRepository
 import com.compprogserver.repository.SubmissionRepository
 import com.compprogserver.repository.UserHandleRepository
 import com.compprogserver.repository.UserRepository
+import graphql.kickstart.tools.GraphQLQueryResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.persistence.EntityNotFoundException
@@ -21,7 +22,7 @@ class SubmissionService @Autowired constructor(
         private val codeforcesConsumer: CodeforcesConsumer,
         private val userHandleRepository: UserHandleRepository,
         private val userRepository: UserRepository
-) {
+) : GraphQLQueryResolver {
 
     fun fetchRemoteSubmissionsFromPlatform(userHandleName: String, platformName: String, username: String)
             : Collection<Submission> {
@@ -40,11 +41,15 @@ class SubmissionService @Autowired constructor(
         return allSubmissions
     }
 
-    fun getAllSubmissionsFromHandle(userHandleName: String, platformName: String): List<Submission> {
+    fun getAllSubmissionsFromUserHandle(userHandleName: String, platformName: String): List<Submission> {
         val platform = Platform.fromDecode(platformName) ?: throw EntityNotFoundException("Platform : $platformName")
         val userHandle = userHandleRepository.findByUserHandleAndPlatform(userHandleName, platform)
 
         return submissionRepository.findAllByUserHandle(userHandle.get())
+    }
+
+    fun getAllSubmissionsFromProblem(problemName : String, platformName : String) : List<Submission> {
+        return emptyList()
     }
 
     fun findAllProblemsByUserHandleSubmissions(userHandle: UserHandle) =

@@ -4,6 +4,7 @@ import com.compprogserver.consumer.CodeforcesConsumer
 import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform
 import com.compprogserver.repository.ContestRepository
+import graphql.kickstart.tools.GraphQLQueryResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
 class ContestService @Autowired constructor(
         private val contestRepository: ContestRepository,
         private val codeforcesConsumer: CodeforcesConsumer
-) {
+) : GraphQLQueryResolver {
+
     fun getUpcomingContests(): List<Contest> {
         val contests = contestRepository.findContestByStartTimeAfter(LocalDateTime.now())
 

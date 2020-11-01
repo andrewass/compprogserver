@@ -1,0 +1,4 @@
+type ProblemWrapper{
+    problem : Problem
+    solved: Boolean
+}

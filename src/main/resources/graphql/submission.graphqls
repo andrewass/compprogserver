@@ -1,0 +1,10 @@
+
+type Submission{
+    id: ID!
+    problem: Problem
+}
+
+extend type Query {
+    allSubmissionsFromUserHandle(userHandleName: String, platformName : String) : [Submission]
+    allSubmissionsFromProblem(problemName : String, platformName : String) : [Submission]
+}

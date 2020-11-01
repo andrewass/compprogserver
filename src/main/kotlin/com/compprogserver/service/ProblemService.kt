@@ -10,6 +10,7 @@ import com.compprogserver.entity.problem.ProblemWrapper
 import com.compprogserver.entity.problem.Verdict
 import com.compprogserver.exception.EntityNotFoundException
 import com.compprogserver.repository.*
+import graphql.kickstart.tools.GraphQLQueryResolver
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -24,7 +25,7 @@ class ProblemService @Autowired constructor(
         private val problemRatingRepository: ProblemRatingRepository,
         private val userHandleRepository: UserHandleRepository,
         private val submissionRepository: SubmissionRepository
-) {
+) : GraphQLQueryResolver {
 
     fun getPopularProblems(username: String?, page: Int, size: Int): Page<ProblemWrapper> {
         val pageable = PageRequest.of(page, size)
@@ -45,7 +46,7 @@ class ProblemService @Autowired constructor(
     }
 
     fun getAllSolvedProblemsForUser(username: String): List<Problem> {
-        val userHandles = userHandleService.getUserHandlesFromUsername(username)
+        val userHandles = userHandleService.getAllUserHandlesByUser(username)
 
         return userHandles.flatMap { submissionService.findAllProblemsByUserHandleSubmissions(it) }
     }

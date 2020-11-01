@@ -19,7 +19,7 @@ class SubmissionController @Autowired constructor(
     fun getAllHandleSubmissions(@RequestBody request: GetSubmissionsFromHandleRequest):
             ResponseEntity<List<Submission>> {
         return try {
-            val submissions = submissionService.getAllSubmissionsFromHandle(request.userHandle, request.platform)
+            val submissions = submissionService.getAllSubmissionsFromUserHandle(request.userHandle, request.platform)
             ResponseEntity(submissions, HttpStatus.OK)
         } catch (e: Exception) {
             ResponseEntity(HttpStatus.UNAUTHORIZED)

@@ -1,0 +1,14 @@
+type User{
+    id: ID!
+    username: String!
+    email: String
+    userHandles: [UserHandle]
+}
+
+extend type Query {
+    allUsers: [User]
+}
+
+extend type Mutation {
+    signUpUser(username: String, password: String, email : String) : Authentication
+}

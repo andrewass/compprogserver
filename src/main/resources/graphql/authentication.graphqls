@@ -1,0 +1,5 @@
+
+type Authentication{
+    user : User
+    jwt : String
+}

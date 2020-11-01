@@ -16,6 +16,7 @@ class UserHandleController @Autowired constructor(
         private val userHandleService: UserHandleService
 ) {
 
+    /*
     @PostMapping("/get-users-userhandles")
     fun getUserHandlesFromUser(@RequestBody request: GetUserHandlesRequest): ResponseEntity<List<UserHandle>> {
         val userHandles = userHandleService.getUserHandlesFromUsername(request.username)
@@ -29,4 +30,5 @@ class UserHandleController @Autowired constructor(
 
         return HttpStatus.OK
     }
+     */
 }

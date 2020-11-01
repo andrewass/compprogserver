@@ -1,0 +1,7 @@
+type Contest{
+
+}
+
+extend type Query {
+    upcomingContests : [Contest]
+}

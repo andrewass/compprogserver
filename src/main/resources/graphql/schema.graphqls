@@ -1,33 +1,4 @@
-type User{
-    id: ID!
-    username: String!
-    email: String
-    userHandles: [UserHandle]
-    solvedProblems: [Problem]
-}
 
-type Problem{
-    id: ID!
-    problemName: String!
-    platform: String
-    rating: Int
-}
+type Query{}
 
-type UserHandle{
-    id: ID!
-    userHandle: String!
-    platform : String
-}
-
-type Submission{
-    id: ID!
-    problem: Problem
-}
-
-type Query{
-    allUsers: [User]
-}
-
-schema {
-    query: Query
-}
+type Mutation{}
