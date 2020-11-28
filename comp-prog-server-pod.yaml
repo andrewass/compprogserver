@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: comp-prog-server
+  name: comp-prog-server
+spec:
+  containers:
+  - env:
+    - name: SPRING_DATASOURCER_URL
+      value: jdbc:mysql://comp-prog-mysql:3306/compprogdb?useSSL=false&allowPublicKeyRetrieval=true
+    - name: SPRING_DATASOURCE_PASSWORD
+      value: password
+    - name: SPRING_DATASOURCE_USERNAME
+      value: user
+    - name: SPRING_PROFILES_ACTIVE
+      value: docker
+    image: comp-prog-server
+    name: comp-prog-server
+    ports:
+    - containerPort: 8080
+    - containerPort: 5005
+    resources: {}
+  restartPolicy: OnFailure
+status: {}

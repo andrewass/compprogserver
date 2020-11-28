@@ -64,3 +64,10 @@ create table t_contest(
 	platform            varchar(50),
 	primary key (contest_id)
 );
+
+create table t_problem_tag(
+    problem_id          bigint(20) not null,
+    tag_name            varchar(30) not null,
+    unique index (problem_id, tag_name),
+    foreign key (problem_id) references t_problem(problem_id)
+);

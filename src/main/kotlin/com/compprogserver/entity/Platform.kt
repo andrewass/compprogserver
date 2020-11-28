@@ -1,9 +1,8 @@
 package com.compprogserver.entity
 
-import java.util.*
+import com.fasterxml.jackson.annotation.JsonValue
 
-enum class Platform(val decode: String) {
-
+enum class Platform(@JsonValue val decode: String) {
 
     CODEFORCES("Codeforces"),
 
@@ -17,6 +16,7 @@ enum class Platform(val decode: String) {
 
     companion object {
         private val map = values().associateBy(Platform::decode)
+
         fun fromDecode(decode: String) = map[decode]
     }
 }

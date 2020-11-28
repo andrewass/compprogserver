@@ -5,8 +5,10 @@ import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
+import com.compprogserver.entity.problem.ProblemTag
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.entity.problem.Verdict
+import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
 import java.time.LocalDateTime
@@ -74,8 +76,21 @@ private fun convertToProblem(problem: JSONObject): Problem {
     return Problem(
             platform = CODEFORCES,
             problemName = problem.getString("name"),
-            problemUrl = "https://codeforces.com/contest/${problem.getInt("contestId")}/problem/${problem.getString("index")}"
+            problemUrl = "https://codeforces.com/contest/${problem.getInt("contestId")}/problem/${problem.getString("index")}",
+            problemTags = toProblemTagList(problem.getJSONArray("tags"))
     )
+}
+
+private fun toProblemTagList(tags : JSONArray) : List<ProblemTag> {
+    val problemTags = mutableListOf<ProblemTag>()
+    for (i in 0 until tags.length()) {
+        val problemTagDecode = tags.getString(i)
+        val problemTag = ProblemTag.fromDecode(problemTagDecode)
+        if(problemTag != null){
+            problemTags.add(problemTag)
+        }
+    }
+    return problemTags
 }
 
 private fun toLocateDateTime(unixTime: Long): LocalDateTime =

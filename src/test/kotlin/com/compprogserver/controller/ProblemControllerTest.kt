@@ -8,6 +8,7 @@ import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
 import com.compprogserver.entity.problem.Problem
+import com.compprogserver.entity.problem.ProblemTag
 import com.compprogserver.entity.problem.Submission
 import com.compprogserver.entity.problem.Verdict
 import org.hamcrest.Matchers.hasSize
@@ -44,9 +45,9 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
     @Test
     fun `should get list of solved problems with solved flag set`(){
         val problems = listOf(
-                Problem(problemName = "problem1", platform = CODEFORCES),
+                Problem(problemName = "problem1", platform = CODEFORCES, problemTags = listOf(ProblemTag.DATA_STRUCTURE)),
                 Problem(problemName = "problem2", platform = CODECHEF),
-                Problem(problemName = "problem3", platform = CODEFORCES),
+                Problem(problemName = "problem3", platform = CODEFORCES, problemTags = listOf(ProblemTag.BINARY_SEARCH)),
                 Problem(problemName = "problem4", platform = KATTIS)
         )
         problemRepository.saveAll(problems)
@@ -79,10 +80,12 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
                 .andExpect(jsonPath("problems", hasSize<Any>(4)))
                 .andExpect(jsonPath("$.problems[0].problem.problemName").value("problem1"))
                 .andExpect(jsonPath("$.problems[0].solved").value("true"))
+                .andExpect(jsonPath("$.problems[0].problem.problemTags[0]").value("Data Structure"))
                 .andExpect(jsonPath("$.problems[1].problem.problemName").value("problem2"))
                 .andExpect(jsonPath("$.problems[1].solved").value("false"))
                 .andExpect(jsonPath("$.problems[2].problem.problemName").value("problem3"))
                 .andExpect(jsonPath("$.problems[2].solved").value("true"))
+                .andExpect(jsonPath("$.problems[2].problem.problemTags[0]").value("Binary Search"))
                 .andExpect(jsonPath("$.problems[3].problem.problemName").value("problem4"))
                 .andExpect(jsonPath("$.problems[3].solved").value("true"))
     }

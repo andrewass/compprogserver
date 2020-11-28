@@ -14,8 +14,11 @@ class Problem(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
 
+        @ElementCollection(fetch = FetchType.EAGER, targetClass = ProblemTag::class)
+        @CollectionTable(name = "T_PROBLEM_TAG", joinColumns = [JoinColumn(name = "PROBLEM_ID")])
         @Enumerated(EnumType.STRING)
-        val problemTag: ProblemTag? = null,
+        @Column(name = "TAG_NAME")
+        val problemTags: List<ProblemTag> = ArrayList(),
 
         @Enumerated(EnumType.STRING)
         val platform: Platform,
