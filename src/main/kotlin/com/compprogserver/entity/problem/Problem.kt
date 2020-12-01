@@ -14,12 +14,6 @@ class Problem(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
 
-        @ElementCollection(fetch = FetchType.EAGER, targetClass = ProblemTag::class)
-        @CollectionTable(name = "T_PROBLEM_TAG", joinColumns = [JoinColumn(name = "PROBLEM_ID")])
-        @Enumerated(EnumType.STRING)
-        @Column(name = "TAG_NAME")
-        val problemTags: List<ProblemTag> = ArrayList(),
-
         @Enumerated(EnumType.STRING)
         val platform: Platform,
 
@@ -39,7 +33,10 @@ class Problem(
 
         @JsonIgnore
         @OneToMany(mappedBy = "problem")
-        val ratings : MutableList<ProblemRating> = mutableListOf()
+        val ratings : MutableList<ProblemRating> = mutableListOf(),
+
+        @OneToMany(mappedBy = "problem", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+        val problemTags: MutableList<ProblemTag> = mutableListOf()
 
 ) {
     override fun hashCode() = problemName.hashCode()

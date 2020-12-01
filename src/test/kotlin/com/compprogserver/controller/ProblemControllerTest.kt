@@ -3,14 +3,12 @@ package com.compprogserver.controller
 import com.compprogserver.common.AbstractIntegrationTest
 import com.compprogserver.controller.request.AddProblemRatingRequest
 import com.compprogserver.controller.request.AddProblemRequest
+import com.compprogserver.controller.request.GetProblemsByTagsRequest
 import com.compprogserver.entity.Platform.*
 import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
-import com.compprogserver.entity.problem.Problem
-import com.compprogserver.entity.problem.ProblemTag
-import com.compprogserver.entity.problem.Submission
-import com.compprogserver.entity.problem.Verdict
+import com.compprogserver.entity.problem.*
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -43,13 +41,24 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `should get list of solved problems with solved flag set`(){
+    fun `should get list of all problem tags`() {
+        mockMvc.perform(get("/problem/all-problem-tags")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("$", hasSize<Any>(12)))
+                .andExpect(jsonPath("$[0]").value("Brute Force"))
+                .andExpect(jsonPath("$[11]").value("String"))
+    }
+
+    @Test
+    fun `should get list of solved problems with solved flag set`() {
         val problems = listOf(
-                Problem(problemName = "problem1", platform = CODEFORCES, problemTags = listOf(ProblemTag.DATA_STRUCTURE)),
+                Problem(problemName = "problem1", platform = CODEFORCES),
                 Problem(problemName = "problem2", platform = CODECHEF),
-                Problem(problemName = "problem3", platform = CODEFORCES, problemTags = listOf(ProblemTag.BINARY_SEARCH)),
+                Problem(problemName = "problem3", platform = CODEFORCES),
                 Problem(problemName = "problem4", platform = KATTIS)
         )
+
         problemRepository.saveAll(problems)
 
         val user = User(username = "testUser")
@@ -80,14 +89,52 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
                 .andExpect(jsonPath("problems", hasSize<Any>(4)))
                 .andExpect(jsonPath("$.problems[0].problem.problemName").value("problem1"))
                 .andExpect(jsonPath("$.problems[0].solved").value("true"))
-                .andExpect(jsonPath("$.problems[0].problem.problemTags[0]").value("Data Structure"))
                 .andExpect(jsonPath("$.problems[1].problem.problemName").value("problem2"))
                 .andExpect(jsonPath("$.problems[1].solved").value("false"))
                 .andExpect(jsonPath("$.problems[2].problem.problemName").value("problem3"))
                 .andExpect(jsonPath("$.problems[2].solved").value("true"))
-                .andExpect(jsonPath("$.problems[2].problem.problemTags[0]").value("Binary Search"))
                 .andExpect(jsonPath("$.problems[3].problem.problemName").value("problem4"))
                 .andExpect(jsonPath("$.problems[3].solved").value("true"))
+    }
+
+    @Test
+    fun `should get list of popular problems with given tags`() {
+        val problems = listOf(
+                Problem(problemName = "problem1", platform = CODEFORCES),
+                Problem(problemName = "problem2", platform = CODEFORCES),
+                Problem(problemName = "problem3", platform = CODEFORCES),
+                Problem(problemName = "problem4", platform = CODEFORCES),
+                Problem(problemName = "problem5", platform = CODEFORCES)
+        )
+
+        problems[0].problemTags.add(ProblemTag(problem = problems[0], categoryTag = CategoryTag.BINARY_SEARCH))
+        problems[2].problemTags.add(ProblemTag(problem = problems[2], categoryTag = CategoryTag.BINARY_SEARCH))
+        problems[2].problemTags.add(ProblemTag(problem = problems[2], categoryTag = CategoryTag.GREEDY))
+        problems[4].problemTags.add(ProblemTag(problem = problems[4], categoryTag = CategoryTag.GREEDY))
+
+        problemRepository.saveAll(problems)
+
+        val request = GetProblemsByTagsRequest(categoryTags = listOf(CategoryTag.BINARY_SEARCH, CategoryTag.GREEDY))
+        val jsonRequest = objectMapper.writeValueAsString(request)
+
+        mockMvc.perform(post("/problem/popular-problems-by-tag")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRequest))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(jsonPath("totalPages").value(1))
+                .andExpect(jsonPath("totalElements").value(3))
+                .andExpect(jsonPath("problems", hasSize<Any>(3)))
+                .andExpect(jsonPath("$.problems[0].problem.problemName").value("problem1"))
+                .andExpect(jsonPath("$.problems[0].problem.problemTags[0].categoryTag")
+                        .value("Binary Search"))
+                .andExpect(jsonPath("$.problems[1].problem.problemName").value("problem3"))
+                .andExpect(jsonPath("$.problems[1].problem.problemTags[0].categoryTag")
+                        .value("Binary Search"))
+                .andExpect(jsonPath("$.problems[1].problem.problemTags[1].categoryTag")
+                        .value("Greedy"))
+                .andExpect(jsonPath("$.problems[2].problem.problemName").value("problem5"))
+                .andExpect(jsonPath("$.problems[2].problem.problemTags[0].categoryTag")
+                        .value("Greedy"))
     }
 
     @Test
@@ -123,7 +170,7 @@ internal class ProblemControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `should return status not found when adding problem of non-existing platform`(){
+    fun `should return status not found when adding problem of non-existing platform`() {
         val request = AddProblemRequest(problemName, "TestPlatform")
         val jsonRequest = objectMapper.writeValueAsString(request)
 

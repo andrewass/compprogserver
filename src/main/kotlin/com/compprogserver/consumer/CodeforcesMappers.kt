@@ -4,10 +4,7 @@ import com.compprogserver.entity.Contest
 import com.compprogserver.entity.Platform.CODEFORCES
 import com.compprogserver.entity.User
 import com.compprogserver.entity.UserHandle
-import com.compprogserver.entity.problem.Problem
-import com.compprogserver.entity.problem.ProblemTag
-import com.compprogserver.entity.problem.Submission
-import com.compprogserver.entity.problem.Verdict
+import com.compprogserver.entity.problem.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Instant
@@ -68,29 +65,31 @@ fun convertToContests(response: String): Set<Contest> {
                 remoteId = contest.getInt("id")
         ))
     }
+
     return contestSet
 }
 
 
 private fun convertToProblem(problem: JSONObject): Problem {
-    return Problem(
+    val newProblem = Problem(
             platform = CODEFORCES,
             problemName = problem.getString("name"),
-            problemUrl = "https://codeforces.com/contest/${problem.getInt("contestId")}/problem/${problem.getString("index")}",
-            problemTags = toProblemTagList(problem.getJSONArray("tags"))
+            problemUrl = "https://codeforces.com/contest/${problem.getInt("contestId")}/problem/${problem.getString("index")}"
     )
+    addProblemTags(problem.getJSONArray("tags"), newProblem)
+
+    return newProblem
 }
 
-private fun toProblemTagList(tags : JSONArray) : List<ProblemTag> {
-    val problemTags = mutableListOf<ProblemTag>()
+private fun addProblemTags(tags : JSONArray, problem: Problem) {
     for (i in 0 until tags.length()) {
-        val problemTagDecode = tags.getString(i)
-        val problemTag = ProblemTag.fromDecode(problemTagDecode)
-        if(problemTag != null){
-            problemTags.add(problemTag)
+        val categoryTagDecode = tags.getString(i)
+        val categoryTag = CategoryTag.fromDecode(categoryTagDecode)
+        if (categoryTag != null) {
+            val problemTag = ProblemTag(problem = problem, categoryTag = categoryTag)
+            problem.problemTags.add(problemTag)
         }
     }
-    return problemTags
 }
 
 private fun toLocateDateTime(unixTime: Long): LocalDateTime =

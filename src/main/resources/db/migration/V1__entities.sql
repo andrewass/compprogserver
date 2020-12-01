@@ -25,7 +25,6 @@ create table t_problem(
 	problem_id          bigint(20)  not null auto_increment,
 	problem_name        varchar(100)  not null,
 	platform            varchar(50),
-	problem_tag         varchar(50),
 	problem_url         varchar(100),
 	rating              int,
 	rate_count          int,
@@ -66,8 +65,9 @@ create table t_contest(
 );
 
 create table t_problem_tag(
+    problem_tag_id      bigint(20) not null auto_increment,
     problem_id          bigint(20) not null,
-    tag_name            varchar(30) not null,
-    unique index (problem_id, tag_name),
+    category_tag        varchar(50) not null,
+    primary key (problem_tag_id),
     foreign key (problem_id) references t_problem(problem_id)
 );

@@ -2,7 +2,9 @@ package com.compprogserver.controller
 
 import com.compprogserver.controller.request.AddProblemRatingRequest
 import com.compprogserver.controller.request.AddProblemRequest
+import com.compprogserver.controller.request.GetProblemsByTagsRequest
 import com.compprogserver.controller.response.GetProblemsResponse
+import com.compprogserver.entity.problem.CategoryTag
 import com.compprogserver.exception.EntityNotFoundException
 import com.compprogserver.service.ProblemService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +20,13 @@ class ProblemController @Autowired constructor(
         private val problemService: ProblemService
 ) {
 
+    @GetMapping("/all-problem-tags")
+    fun getAllProblemTags() : ResponseEntity<List<CategoryTag>> {
+        val problemTags = problemService.getAllProblemTags()
+
+        return ResponseEntity.ok(problemTags)
+    }
+    
     @GetMapping("/solved-problems")
     fun getSolvedProblemsByIdForUser(@RequestParam username: String): ResponseEntity<List<Long>> {
         val problems = problemService.getAllSolvedProblemsForUser(username)
@@ -30,6 +39,17 @@ class ProblemController @Autowired constructor(
                     @RequestParam(defaultValue = "0") page: Int,
                     @RequestParam(defaultValue = "15") size: Int): ResponseEntity<GetProblemsResponse> {
         val responsePage = problemService.getPopularProblems(username, page, size)
+        val response = GetProblemsResponse(
+                totalElements = responsePage.totalElements,
+                totalPages = responsePage.totalPages,
+                problems = responsePage.content
+        )
+        return ResponseEntity.ok(response)
+    }
+    
+    @PostMapping("/popular-problems-by-tag")
+    fun getProblemsByTags(@RequestBody request : GetProblemsByTagsRequest) : ResponseEntity<GetProblemsResponse> {
+        val responsePage = problemService.getPopularProblemsByTag(request)
         val response = GetProblemsResponse(
                 totalElements = responsePage.totalElements,
                 totalPages = responsePage.totalPages,
