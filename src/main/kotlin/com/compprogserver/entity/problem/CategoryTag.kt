@@ -1,7 +1,9 @@
 package com.compprogserver.entity.problem
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonValue
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 enum class CategoryTag(@JsonValue val representation : String, val decodes: List<String>) {
     BRUTE_FORCE("Brute Force", listOf("Brute Force, brute force")),
     DATA_STRUCTURE("Data Structure", listOf("Data Structure, data structures")),

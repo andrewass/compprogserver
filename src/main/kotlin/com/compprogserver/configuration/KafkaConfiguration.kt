@@ -37,6 +37,7 @@ class KafkaConfiguration {
         return KafkaTemplate(contestProducerConfig())
     }
 
+
     @Bean
     fun contestProducerConfig(): ProducerFactory<String, Contest> {
         val config = HashMap<String, Any>()

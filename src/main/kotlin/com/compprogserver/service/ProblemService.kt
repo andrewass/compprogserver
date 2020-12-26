@@ -6,8 +6,8 @@ import com.compprogserver.controller.request.GetProblemsByTagsRequest
 import com.compprogserver.entity.Platform
 import com.compprogserver.entity.ProblemRating
 import com.compprogserver.entity.User
-import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.CategoryTag
+import com.compprogserver.entity.problem.Problem
 import com.compprogserver.entity.problem.ProblemWrapper
 import com.compprogserver.entity.problem.Verdict
 import com.compprogserver.exception.EntityNotFoundException
@@ -36,9 +36,13 @@ class ProblemService @Autowired constructor(
         return wrapProblems(problems, username)
     }
 
-    fun getPopularProblemsByTag(request: GetProblemsByTagsRequest): Page<ProblemWrapper> {
+    fun getPopularProblemsByTags(request: GetProblemsByTagsRequest): Page<ProblemWrapper> {
         val pageable = PageRequest.of(request.page, request.size, Sort.by("rating"))
-        val problems = problemRepository.findAllProblemsWithGivenTags(request.categoryTags, pageable)
+        val problems = if (request.categoryTags.isEmpty()) {
+            problemRepository.findAll(pageable)
+        } else {
+            problemRepository.findAllProblemsWithGivenTags(request.categoryTags, pageable)
+        }
 
         return wrapProblems(problems, request.username)
     }
@@ -116,5 +120,4 @@ class ProblemService @Autowired constructor(
     fun getAllProblemTags(): List<CategoryTag> {
         return CategoryTag.values().asList()
     }
-
 }

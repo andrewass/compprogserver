@@ -21,12 +21,12 @@ class ProblemController @Autowired constructor(
 ) {
 
     @GetMapping("/all-problem-tags")
-    fun getAllProblemTags() : ResponseEntity<List<CategoryTag>> {
+    fun getAllProblemTags(): ResponseEntity<List<CategoryTag>> {
         val problemTags = problemService.getAllProblemTags()
 
         return ResponseEntity.ok(problemTags)
     }
-    
+
     @GetMapping("/solved-problems")
     fun getSolvedProblemsByIdForUser(@RequestParam username: String): ResponseEntity<List<Long>> {
         val problems = problemService.getAllSolvedProblemsForUser(username)
@@ -46,10 +46,10 @@ class ProblemController @Autowired constructor(
         )
         return ResponseEntity.ok(response)
     }
-    
+
     @PostMapping("/popular-problems-by-tag")
-    fun getProblemsByTags(@RequestBody request : GetProblemsByTagsRequest) : ResponseEntity<GetProblemsResponse> {
-        val responsePage = problemService.getPopularProblemsByTag(request)
+    fun getProblemsByTags(@RequestBody request: GetProblemsByTagsRequest): ResponseEntity<GetProblemsResponse> {
+        val responsePage = problemService.getPopularProblemsByTags(request)
         val response = GetProblemsResponse(
                 totalElements = responsePage.totalElements,
                 totalPages = responsePage.totalPages,

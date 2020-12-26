@@ -1,6 +1,26 @@
 version: '3'
 
 services:
+  #Zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  #Kafka
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=localhost
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CREATE_TOPICS=Problems1:1:1,Contests1:1:1
+    depends_on:
+      - zookeeper
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   #Mysql Database
   comp-prog-mysql:
     image: mysql:8.0
@@ -10,9 +30,9 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
-    - mysql-volume:/var/lib/mysql
+      - mysql-volume:/var/lib/mysql
 
   #Spring Boot comp prog server
   comp-prog-server:
@@ -20,6 +40,8 @@ services:
     build: .
     depends_on:
       - comp-prog-mysql
+      - zookeeper
+      - kafka
     restart: on-failure
     environment:
       - SPRING_DATASOURCER_URL=jdbc:mysql://comp-prog-mysql:3306/compprogdb?useSSL=false&allowPublicKeyRetrieval=true
@@ -27,8 +49,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - 8080:8080
-      - 5005:5005
+      - "8080:8080"
+      - "5005:5005"
 
 volumes:
   mysql-volume:

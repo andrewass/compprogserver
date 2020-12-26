@@ -11,4 +11,3 @@ class CompProgServerApplication
 fun main(args: Array<String>) {
     runApplication<CompProgServerApplication>(*args)
 }
-
