@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
-@Component
+//@Component
 class KafkaConsumer {
 
     private val log = LoggerFactory.getLogger(KafkaConsumer::class.java)
 
-    @KafkaListener(topics = ["contests"], groupId = "groupId")
+    //@KafkaListener(topics = ["contests"], groupId = "groupId", autoStartup = "false")
     fun receive(contest: Contest) {
         log.info("Receiving contest ${contest.contestName}")
     }

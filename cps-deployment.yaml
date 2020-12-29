@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comp-prog-server
+  labels:
+    app: comp-prog-server
+spec:
+  replicas: 1 #Number of pods to run in this deployment
+  selector:
+    matchLabels: #Deployment applies to any pods matching the specified labels
+      app: comp-prog-server
+  template: #Template for creating the pods in this deployment
+    metadata:
+      labels: #Labels that will applied to each pod in this deployment
+        app: comp-prog-server
+    spec: #Spec for the containers that will run in the pods
+      containers:
+        - name: comp-prog-server
+          image: comp-prog-server:0.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080 #The port exposed by the container
+          env: #Environment variables supplied to the Pod
+            - name: SPRING_DATASOURCER_URL
+              value: jdbc:mysql://comp-prog-mysql:3306/compprogdb?useSSL=false&allowPublicKeyRetrieval=true
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_DATASOURCE_USERNAME
+              value: user
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker

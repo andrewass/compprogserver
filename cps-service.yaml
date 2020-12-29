@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: comp-prog-server
+  labels: #Labels applied to this resource
+    app: comp-prog-server
+spec:
+  ports: #Forward incoming connections on port to target port
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app : comp-prog-server #This service exposes Pods with label app=comp-prog-server

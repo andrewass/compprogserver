@@ -1,26 +1,7 @@
-version: '3'
+  eval $(minikube docker-env)
+  version: '3'
 
 services:
-  #Zookeeper
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-
-  #Kafka
-  kafka:
-    image: wurstmeister/kafka
-    ports:
-      - "9092:9092"
-    environment:
-      - KAFKA_ADVERTISED_HOST_NAME=localhost
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CREATE_TOPICS=Problems1:1:1,Contests1:1:1
-    depends_on:
-      - zookeeper
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   #Mysql Database
   comp-prog-mysql:
     image: mysql:8.0
@@ -40,8 +21,6 @@ services:
     build: .
     depends_on:
       - comp-prog-mysql
-      - zookeeper
-      - kafka
     restart: on-failure
     environment:
       - SPRING_DATASOURCER_URL=jdbc:mysql://comp-prog-mysql:3306/compprogdb?useSSL=false&allowPublicKeyRetrieval=true

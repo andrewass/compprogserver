@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment #Name of the deployment
+  labels: #Labels applies to this deployment
+    app: comp-prog-app
+spec:
+  selector:
+    matchLabels: #This deployment applies to the pods matching specified labels
+      app: comp-prog-app
+      tier: mysql
+  strategy:
+    type: Recreate
+  template: #Template for the pods in this deployment
+    metadata:
+      labels: #Labels applied to the pods in the deployment
+        app: comp-prog-app
+        tier: mysql
+    spec: #Spec for the containers that will be run inside the pods in the deployment
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        env:
+        - name: MYSQL_DATABASE
+          value: compprogdb
+        - name: MYSQL_PASSWORD
+          value: password
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_USER
+          value: user
+        ports:
+        - containerPort: 3306 #The port exposed by the container
+          name: mysql
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-volume
+      volumes:  #A PersistentVolume is mounted as a volume to the pod
+      - name: mysql-volume
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+status: {}
